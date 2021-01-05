@@ -3,7 +3,7 @@
 ### How to install
 
 ```bash
-git clone [https://github.com/SevcanDogramaci/AnGenoV.git](https://github.com/SevcanDogramaci/AnGenoV.git)
+git clone https://github.com/SevcanDogramaci/AnGenoV.git
 ```
 ### Run AnGenoV
 
@@ -18,7 +18,7 @@ virtualenv .venv
 ##### Start server
 
 ```bash
-cd server
+cd server/
 
 pip install -r requirements.txt
 
