@@ -10,3 +10,7 @@ def hello_world():
 @app.route('/another_world')
 def hello_another_world():
     return 'Hello Another World :)!'
+
+@app.route('/get_variants')
+def get_variants():
+    return 'Variants returned !'
