@@ -1,5 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import NavBar from "./components/NavBar"
+import CallingPage from "./pages/Calling/CallingPage"
+import AnnotationPage from "./pages/Annotation/AnnotationPage"
 import axios from 'axios';
 
 async function checkCommunication() {
@@ -26,10 +28,9 @@ const App = (props) => {
   return (
     <>
         <NavBar/>
-        <div style={{display:"flex", flexDirection:"column", alignItems:"center", margin: 20}}>
-          <p>{response}</p>
-          <p>{response2}</p>
-        </div>
+        {/* Open the Page component which you want to see */}
+        <CallingPage/>
+        {/* <AnnotationPage/> */}
     </>
   );
 }

@@ -5,6 +5,7 @@
   "private": true,
   "dependencies": {
     "@blueprintjs/core": "^3.36.0",
+    "@blueprintjs/table": "^3.8.18",
     "@testing-library/jest-dom": "^5.11.6",
     "@testing-library/react": "^11.2.2",
     "@testing-library/user-event": "^12.6.0",
