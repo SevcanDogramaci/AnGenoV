@@ -9,7 +9,7 @@ async function getVariants(vcfFileName) {
     return response.data;
   }
 
-const AnnotationPage = () => {
+const VariantAnnotationPage = () => {
     const [VCFfileName, setVCFfileName] = useState("Choose File");
     const [variants, setVariants] = useState([]);
 
@@ -36,4 +36,4 @@ const AnnotationPage = () => {
     );
 }
 
-export default AnnotationPage;
+export default VariantAnnotationPage;
