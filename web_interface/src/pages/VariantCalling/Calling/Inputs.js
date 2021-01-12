@@ -1,3 +1,4 @@
+import {useState} from "react";
 import {
     Button,
     Menu,
@@ -7,7 +8,15 @@ import {
     Checkbox,
 } from "@blueprintjs/core";
 
-const Inputs = () => {
+const Inputs = (props) => {
+
+    const [readOption, setReadOption] = useState("Method");
+
+    const updateReadOption = readOption => {
+        console.log(`${readOption} clicked`);
+        setReadOption(readOption);
+        props.updateReadOption(readOption);
+    }
 
     return (
 
@@ -20,14 +29,15 @@ const Inputs = () => {
 
             <p style={{marginTop:"2.5%"}}>Select Your Method :</p>
 
-            <Popover content={
+            
+            <Popover  content={
                 <Menu>
             
-                        <MenuItem text="Illumina" />
-                        <MenuItem text="PacBio/Oxford Nanopore"/>
+                        <MenuItem onClick={e => {updateReadOption("Illumina")}} text="Illumina" />
+                        <MenuItem onClick={e => {updateReadOption("PacBio")}} text="PacBio/Oxford Nanopore"/>
 
                 </Menu>} position={PopoverPosition.RIGHT_TOP}>
-                <Button rightIcon="caret-down" text="Method"/>
+                <Button rightIcon="caret-down" text={readOption}/>
             </Popover>
 
             <div style={{marginTop: "2.5%"}}>
