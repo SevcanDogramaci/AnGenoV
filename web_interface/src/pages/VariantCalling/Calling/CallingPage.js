@@ -6,7 +6,7 @@ import { ControlGroup } from "@blueprintjs/core";
 const CallingPage = () => {
     return (
         <div style={{display:"flex", flexDirection:"row", marginTop:"2.5%",
-                    alignItems:"flex-start", justifyContent:"center"}}>
+                    alignItems:"flex-start", justifyContent:"space-between",  width:"75%"}}>
             <ControlGroup fill={true}>
                 <Inputs/>
             </ControlGroup>

@@ -8,7 +8,7 @@ const MergePage = () => {
     return (
         <div style={{display:"flex", flexDirection:"column", alignItems:"center", 
                         marginTop:"2.5%", justifyContent:"center"}}>
-            <h2 class="bp3-heading"> Merge SV</h2>
+            <h3 class="bp3-heading"> Merge SV</h3>
             <p style={{marginTop:"2%"}}>Load your SVs in VCF format</p>
             <FileInput buttonText="Choose" text={VCFfileName} 
                 onInputChange={event => setVCFfileName(event.target.files[0].name)} style={{marginTop:"2%"}}/>

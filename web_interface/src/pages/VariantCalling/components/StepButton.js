@@ -10,13 +10,15 @@ const StepButton = (props) => {
     }
 
     return (
-        <div style={{display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center"}}>
+        <div style={{display:"flex", flexDirection:"column", 
+                     alignItems:"center", justifyContent:"center"}}>
+
             <NavLink  style={{color: "#C4C4C4"}} to={props.to}>
             <Button style={buttonStyle}
                     onClick={e => props.onClick(props.name)} className={Classes.MINIMAL}/>
             </NavLink>
             
-            <p style={{color: color}}>{props.name}</p>
+            <p style={{color: color, marginBottom: 0}}>{props.name}</p>
         </div>
     );
 }

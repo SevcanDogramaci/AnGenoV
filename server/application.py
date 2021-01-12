@@ -1,5 +1,7 @@
-
+import variant_reader
 from flask import Flask
+from flask import request
+
 app = Flask(__name__)
 
 
@@ -13,4 +15,6 @@ def hello_another_world():
 
 @app.route('/get_variants')
 def get_variants():
-    return 'Variants returned !'
+    vcf_file_name = request.args.get('file')
+    variants = variant_reader.get_variants(vcf_file_name)
+    return variants
