@@ -23,11 +23,19 @@ const Inputs = (props) => {
         <div style={{display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center"}}>
 
             <h3 class="bp3-heading">Input</h3>
-            <p>Load Your Alignment in BAM Format</p>
+
+            <p style={{marginTop:"2%"}}>Load your Input Files</p>
+            <div style={{display:"flex", flexDirection:"row", marginTop:"4%", justifyContent:"space-between", alignItems:"center"}}>
+            <p style={{marginTop:"2%"}}>Aligned File:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
             <Button text="Choose File"/>
+            </div>
+            &nbsp;&nbsp;
+            <div style={{display:"flex", flexDirection:"row", marginTop:"1%", justifyContent:"space-between", alignItems:"center"}}>
+            <p style={{marginTop:"2%"}}>Reference File:&nbsp;</p>
+            <Button text="Choose File"/>
+            </div>
 
-
-            <p style={{marginTop:"2.5%"}}>Select Your Method :</p>
+            <p style={{marginTop:"7%"}}>Select Your Method :</p>
 
             
             <Popover  content={
