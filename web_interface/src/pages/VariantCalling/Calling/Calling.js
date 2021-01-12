@@ -3,17 +3,13 @@ import { Checkbox, Button, ControlGroup } from "@blueprintjs/core";
 const smallReadSVCallers = ["Tardis", "Delly", "Lumpy", "Manta", "Smoove"]
 const longReadSVCallers = [ "Svim", "CuteSV", "Sniffles"]
 
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
-
 const Calling = (props) => {
     const SVCallers = props.readOption == "Illumina" ? smallReadSVCallers : longReadSVCallers;
 
     async function updateRunning(e) {
         console.log("Running...");
         props.updateRunning(true);
-        await sleep(2500);
+        await new Promise(resolve => setTimeout(resolve, 2500)); // to imitate running
         props.updateRunning(false);
     }
     
