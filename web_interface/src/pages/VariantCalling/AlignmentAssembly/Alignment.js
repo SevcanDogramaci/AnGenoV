@@ -1,6 +1,8 @@
 import { useState} from 'react';
 import { Button, FileInput, Checkbox, ControlGroup} from "@blueprintjs/core";
 
+const sequenceTypes = ["Illumina", "PacBio / Oxford Nanopore"]
+
 const AlignmentPage = () => {
     const [FASTQFileName, setFASTQfileName] = useState("Choose a FASTQ File");
     const [ReferenceFASTQFileName, setReferenceFASTQfileName] = useState("Choose reference FASTQ");
@@ -8,20 +10,22 @@ const AlignmentPage = () => {
     return (
         <div style={{display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", marginTop:"2.5%"}}>
             <h3 class="bp3-heading">Alignment</h3>
-            <p style={{marginTop:"2%"}}>Load your sequences in FASTQ format</p>
+            <p style={{marginTop:"2%"}}>Load your sequence files</p>
 
-            <ControlGroup vertical={true} style={{marginTop:"2%"}}>
-            <FileInput buttonText="Choose" text={FASTQFileName} 
-                onInputChange={event => setFASTQfileName(event.target.files[0].name)}/>
-            &nbsp;&nbsp;&nbsp;
-            <FileInput buttonText="Choose" text={ReferenceFASTQFileName} 
-            onInputChange={event => setReferenceFASTQfileName(event.target.files[0].name)}/>
-            </ControlGroup>
+            <div style={{display:"flex", flexDirection:"row", marginTop:"3%", justifyContent:"space-between", alignItems:"center"}}>
+            <p style={{marginTop:"2%"}}>Sample File:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+            <Button text="Choose File"/>
+            </div>
 
-            <div style={{display:"flex", flexDirection:"row", marginTop:"5%", justifyContent:"space-between", alignItems:"center"}}>
-                <Checkbox>Short Read</Checkbox>
-                &nbsp;&nbsp;&nbsp;
-                <Checkbox>Long Read</Checkbox>
+            <div style={{display:"flex", flexDirection:"row", marginTop:"2%", justifyContent:"space-between", alignItems:"center"}}>
+            <p style={{marginTop:"2%"}}>Reference File:&nbsp;</p>
+            <Button text="Choose File"/>
+            </div>
+
+            <div style={{marginTop:"5%"}}>
+                { sequenceTypes.map((types, id) =>  {
+                    return id < sequenceTypes.length ? 
+                        <Checkbox key={id}>{types}</Checkbox> : <></>})}
             </div>
 
             <Button text="Generate" style={{marginTop:"2%"}}/>

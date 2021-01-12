@@ -8,13 +8,12 @@ const AssemblyPage = () => {
     return (
         <div style={{display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", marginTop:"2.5%"}}>
             <h3 class="bp3-heading">Assembly</h3>
-            <p style={{marginTop:"2%"}}>Load your sequences in FASTA or FASTQ format</p>
+            <p style={{marginTop:"2%"}}>Load your sequence file </p>
 
-            <FileInput buttonText="Choose" text={FASTQFileName} style={{marginTop:"2%"}}
-                onInputChange={event => setFASTQfileName(event.target.files[0].name)}/>
-
-            <p style={{marginTop:"5%"}}>Select an algorithm</p>
-
+            <Button text="Choose Files"/>
+            <div style={{display:"flex", flexDirection:"row", marginTop:"1.5%", justifyContent:"space-between", alignItems:"center"}}>
+            <p style={{marginTop:"5%"}}>Select an algorithm:&nbsp;&nbsp;&nbsp;</p>
+            
             <Popover content={
                 <Menu>
             
@@ -23,6 +22,7 @@ const AssemblyPage = () => {
                 </Menu>} position={PopoverPosition.BOTTOM}>
                 <Button rightIcon="caret-down" text="Flye"/>
             </Popover>
+            </div>
 
             <div style={{display:"flex", flexDirection:"row", marginTop:"1.5%", justifyContent:"space-between", alignItems:"center"}}>
                 <p>Output format:&nbsp;&nbsp;&nbsp;</p>
