@@ -1,4 +1,5 @@
 import {
+    Button,
     Alignment,
     Navbar,
     NavbarDivider,
@@ -20,7 +21,9 @@ const NavBar = () => {
             <NavButton to='/calling' name="Variant Calling"/>
             <NavButton to='/annotation' name="Variant Annotation"/>
             <NavbarDivider/>
-            <NavButton to='/docs' name="Docs" icon="document" />
+            <a target="_blank" href="https://github.com/SevcanDogramaci/AnGenoV">
+            <Button text="Docs" icon="document" />
+            </a>
         </NavbarGroup>
         </Navbar>
     );
