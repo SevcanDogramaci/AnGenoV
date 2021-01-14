@@ -4,7 +4,7 @@ import { IconNames } from "@blueprintjs/icons";
 import { INTENT_PRIMARY } from '@blueprintjs/core/lib/esm/common/classes';
 
 const sequenceTypes = ["Illumina", "PacBio / Oxford Nanopore"]
-const sequenceInfo = {"Illumina" : "Short Read", "PacBio / Oxford Nanopore" : "Long Read"}
+const sequenceInfo = {"Illumina" : "Short Read, uses BWA-MEM algorithm.", "PacBio / Oxford Nanopore" : "Long Read, uses Minimap2 algorithm."}
 const AlignmentPage = () => {
     const [FASTQFileName, setFASTQfileName] = useState("Choose a FASTQ File");
     const [ReferenceFASTQFileName, setReferenceFASTQfileName] = useState("Choose reference FASTQ");
