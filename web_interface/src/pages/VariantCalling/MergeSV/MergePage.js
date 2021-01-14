@@ -4,6 +4,11 @@ import { Button, Menu, MenuItem, Popover, Tooltip, Position, Icon, Intent,
 
 const MergePage = () => {
     const [VCFfileName, setVCFfileName] = useState("Choose VCF File");
+    const [mergeTool, setMergeTool] = useState("Truvari");
+
+    const updateMergeTool = (mergeTool) => {
+        setMergeTool(mergeTool);
+    }
 
     return (
         <div style={{display:"flex", flexDirection:"column", alignItems:"center", 
@@ -23,12 +28,10 @@ const MergePage = () => {
 
             <Popover content={
                 <Menu>
-            
-                        <MenuItem text="Truvari" />
-                        <MenuItem text="SURVIVOR"/>
-
+                    <MenuItem text="Truvari" onClick={e => updateMergeTool("Truvari")}/>
+                    <MenuItem text="SURVIVOR" onClick={e => updateMergeTool("SURVIVOR")}/>
                 </Menu>} position={PopoverPosition.BOTTOM}>
-                <Button rightIcon="caret-down" text="Truvari"/>
+                <Button rightIcon="caret-down" text={mergeTool}/>
             </Popover>
 
             <Button text="Merge" style={{marginTop:"4%"}}/>
@@ -37,11 +40,8 @@ const MergePage = () => {
                 &nbsp;&nbsp;&nbsp;
                 <Button text="View Output"/>
             </div>
-
-
         </div>
     );
-
 }
 
 

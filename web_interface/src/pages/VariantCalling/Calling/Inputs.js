@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useState, useEffect} from "react";
 import {
     Button,
     Menu,
@@ -10,7 +10,11 @@ import {
 
 const Inputs = (props) => {
 
-    const [readOption, setReadOption] = useState("Method");
+    const [readOption, setReadOption] = useState("Illumina");
+
+    useEffect(() => {
+        props.updateReadOption(readOption);
+    }, [])
 
     const updateReadOption = readOption => {
         console.log(`${readOption} clicked`);
@@ -25,30 +29,28 @@ const Inputs = (props) => {
             <h3 class="bp3-heading">Input</h3>
 
             <p style={{marginTop:"2%"}}>Load your Input Files</p>
-            <div style={{display:"flex", flexDirection:"row", marginTop:"4%", justifyContent:"space-between", alignItems:"center"}}>
-            <p style={{marginTop:"2%"}}>Aligned File:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
-            <Button text="Choose File"/>
-            </div>
-            &nbsp;&nbsp;
-            <div style={{display:"flex", flexDirection:"row", marginTop:"1%", justifyContent:"space-between", alignItems:"center"}}>
-            <p style={{marginTop:"2%"}}>Reference File:&nbsp;</p>
-            <Button text="Choose File"/>
+
+            <div>
+                <div style={{display:"flex", flexDirection:"row", marginTop:"4%", justifyContent:"space-between", alignItems:"center"}}>
+                    <p>Aligned File :</p>
+                    <Button text="Choose File"/>
+                </div>
+                <div style={{display:"flex", flexDirection:"row", marginTop:"4%", justifyContent:"space-between", alignItems:"center"}}>
+                    <p>Reference File :</p>
+                    <Button text="Choose File"/>
+                </div>
             </div>
 
-            <p style={{marginTop:"7%"}}>Select Your Method :</p>
-
-            
+            <p style={{marginTop:"10%"}}>Select Your Method :</p>
             <Popover  content={
                 <Menu>
-            
-                        <MenuItem onClick={e => {updateReadOption("Illumina")}} text="Illumina" />
-                        <MenuItem onClick={e => {updateReadOption("PacBio")}} text="PacBio/Oxford Nanopore"/>
-
+                    <MenuItem onClick={e => {updateReadOption("Illumina")}} text="Illumina" />
+                    <MenuItem onClick={e => {updateReadOption("PacBio")}} text="PacBio/Oxford Nanopore"/>
                 </Menu>} position={PopoverPosition.RIGHT_TOP}>
                 <Button rightIcon="caret-down" text={readOption}/>
             </Popover>
 
-            <div style={{marginTop: "2.5%"}}>
+            <div style={{marginTop: "10%"}}>
                 <Checkbox label="SNP Calling"/>
                 <Checkbox label="Genotyping" />
                 <Checkbox label="SV Calling" />
