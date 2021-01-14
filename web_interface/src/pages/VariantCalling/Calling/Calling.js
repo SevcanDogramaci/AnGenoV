@@ -1,7 +1,10 @@
 import { Checkbox, Button, ControlGroup } from "@blueprintjs/core";
+import Service from "./Service";
+import { useState } from "react";
 
 const smallReadSVCallers = ["Tardis", "Delly", "Lumpy", "Manta", "Smoove"]
 const longReadSVCallers = [ "Svim", "CuteSV", "Sniffles"]
+
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -9,12 +12,36 @@ function sleep(ms) {
 
 const Calling = (props) => {
     const SVCallers = props.readOption == "Illumina" ? smallReadSVCallers : longReadSVCallers;
+    const [checkedCallers, updateCheckedCallers] = useState([]);
+
+    async function sleep(e) {
+        await new Promise(resolve => setTimeout(resolve, 2500)); // to imitate running
+    }
 
     async function updateRunning(e) {
         console.log("Running...");
         props.updateRunning(true);
-        await sleep(2500);
-        props.updateRunning(false);
+        let logs = "";
+
+        checkedCallers.forEach(caller => {
+            logs += caller +  " running...\n";
+        });
+        props.updateLogs(logs);
+        Service.runDelly().then(response => {
+            props.updateLogs(response);
+            sleep().then(r => {props.updateRunning(false);});
+            })
+    }
+
+    const handleSVCallerChecked = (e, name) => {
+        let is_checked = e.target.checked
+
+        if (is_checked) 
+            checkedCallers.push(name);
+        else 
+            updateCheckedCallers(checkedCallers.filter(item => item !== name))
+
+        console.log(checkedCallers)
     }
     
     return (
@@ -26,9 +53,9 @@ const Calling = (props) => {
 
             <div>
 
-                { SVCallers.map((algorithm, id) =>  {
+            { SVCallers.map((algorithm, id) =>  {
                     return id < SVCallers.length ? 
-                        <Checkbox key={id}>{algorithm}</Checkbox> : <></>})}
+                        <Checkbox onChange={e => handleSVCallerChecked(e, algorithm)} key={id}>{algorithm}</Checkbox> : <></>})}
                 {/* <ControlGroup vertical={false}>
                     <Checkbox>Deneme</Checkbox>
                     <Button icon="plus" className="bp3-intent-primary" 

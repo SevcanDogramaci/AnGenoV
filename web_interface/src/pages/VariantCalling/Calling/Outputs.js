@@ -9,14 +9,15 @@ const Outputs = (props) => {
 
             {props.isRunning === true ?       
             <div isOpen={true} keepChildrenMounted={true}>
-                <Pre>
-                    { SVCallingAlgorithms.map((algorithm, id) => 
-                         id < 3 ?
-                        <p key={id}>{`${algorithm.toLowerCase()} running...\n${algorithm.toLowerCase()} completed.\n${algorithm.toLowerCase()} completed.`}</p> 
-                        : <></>
-                        )}
-                </Pre>
-            </div> 
+            <Pre>
+                {/* { SVCallingAlgorithms.map((algorithm, id) => 
+                    id < 3 ?
+                    <p key={id}>{${algorithm.toLowerCase()} running...\n${algorithm.toLowerCase()} completed.\n${algorithm.toLowerCase()} completed.}</p> 
+                    : <></>
+                    )} */}
+                    {props.logs}
+            </Pre>
+            </div>
             : props.isRunning === undefined ? <p>No outputs</p> :
             <>
              <div style={{width:"50%"}}>
