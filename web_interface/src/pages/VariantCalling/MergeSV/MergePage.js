@@ -10,8 +10,11 @@ const MergePage = () => {
                         marginTop:"2.5%", justifyContent:"center"}}>
             <h3 class="bp3-heading"> Merge SV</h3>
             <p style={{marginTop:"2%"}}>Load your SVs in VCF format</p>
-            <div style={{display:"flex", flexDirection:"row",  alignItems:"center"}}> <FileInput buttonText="Choose" text={VCFfileName} 
-                onInputChange={event => setVCFfileName(event.target.files[0].name)} style={{marginTop:"2%"}}/>
+            <div style={{display:"flex", flexDirection:"row",  alignItems:"center"}}> <FileInput buttonText="Choose" text={VCFfileName}  style={{margin:"2%"}}
+                           onInputChange={event => {
+                               if (event.target.files[0])
+                                    setVCFfileName(event.target.files[0].name);
+                               }}/>
                 <Tooltip content="At least 2 VCF files" position={Position.RIGHT} intent="warning">
                     <Icon icon="info-sign" intent="warning"/>
                 </Tooltip> </div>
@@ -39,7 +42,8 @@ const MergePage = () => {
         </div>
     );
 
-
 }
+
+
 
 export default MergePage;
