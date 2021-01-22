@@ -8,6 +8,8 @@ const CallingPage = () => {
     const [readOption, setReadOption] = useState(undefined);
     const [running, setRunning] = useState(undefined);
 
+    const [logs, updateLogs] = useState("");
+
     return (
         <div style={{display:"flex", flexDirection:"row", marginTop:"2.5%",
                     alignItems:"flex-start", justifyContent:"space-between",  width:"75%"}}>
@@ -15,10 +17,10 @@ const CallingPage = () => {
                 <Inputs updateReadOption={setReadOption}/>
             </ControlGroup>
             <ControlGroup fill={true}>
-                <Calling readOption={readOption} updateRunning={setRunning}/>
+                <Calling readOption={readOption} updateRunning={setRunning} updateLogs={updateLogs}/>
             </ControlGroup>
             <ControlGroup fill={true}>
-                <Outputs isRunning={running}/>
+                <Outputs isRunning={running} logs={logs}/>
             </ControlGroup>
         </div>
     );

@@ -12,7 +12,7 @@ const AssemblyPage = () => {
 
             <div style={{display:"flex", flexDirection:"row",  alignItems:"center"}}> <Button text="Choose Files"/> &nbsp;&nbsp;
                                             <Tooltip content="At least 2 files (fasta, fastq)" position={Position.RIGHT} intent="warning">
-                                            <Icon icon="info-sign" intent="warning"/>
+                                            <Icon icon="info-sign"  intent={Intent.WARNING}/>
                                             </Tooltip> </div>
 
             <div style={{display:"flex", flexDirection:"row", marginTop:"1.5%", justifyContent:"space-between", alignItems:"center"}}>
