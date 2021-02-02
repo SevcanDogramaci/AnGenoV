@@ -1,3 +1,4 @@
+import React from 'react';
 import { Checkbox, Button, ControlGroup } from "@blueprintjs/core";
 import Service from "./Service";
 import { useState } from "react";
@@ -19,6 +20,7 @@ const Calling = (props) => {
     }
 
     async function updateRunning(e) {
+        console.log(props.filesForCall);
         console.log("Running...");
         props.updateRunning(true);
         let logs = "";
@@ -27,8 +29,8 @@ const Calling = (props) => {
             logs += caller +  " running...\n";
         });
         props.updateLogs(logs);
-        Service.runDelly().then(response => {
-            props.updateLogs(response);
+        Service.runDelly(props.filesForCall).then(response => {
+            //props.updateLogs(response);
             sleep().then(r => {props.updateRunning(false);});
             })
     }
@@ -42,6 +44,7 @@ const Calling = (props) => {
             updateCheckedCallers(checkedCallers.filter(item => item !== name))
 
         console.log(checkedCallers)
+        props.updateCallers(checkedCallers);
     }
     
     return (

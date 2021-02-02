@@ -1,3 +1,4 @@
+import React from 'react';
 import {Button,} from "@blueprintjs/core";
 
 const UpperHr = <hr style={{color: "#d4d4d4",backgroundColor: "#d4d4d4",width: "100%",height:1, borderWidth: 0 }} />;
@@ -10,7 +11,7 @@ const HomePage = () => {
 
         <div style={{display:"flex", flexDirection:"column", alignItems:"center", marginTop:"2.5%", justifyContent:"center"}}>
             
-            <h1 class="bp3-heading">AnGenoV</h1>
+            <h1 className="bp3-heading">AnGenoV</h1>
             <p>Analysis of Genome Variants</p>
 
             <div style={{display:"flex", flexDirection:"row", marginTop:"2.5%", width:"75%",

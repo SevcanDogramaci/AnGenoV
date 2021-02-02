@@ -1,3 +1,4 @@
+import React from 'react';
 import Alignment from "./Alignment"
 import Assembly from "./Assembly"
 import { ControlGroup } from "@blueprintjs/core";

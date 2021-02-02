@@ -1,27 +1,33 @@
+import React from 'react';
 import { Checkbox, Button, ControlGroup, Pre } from "@blueprintjs/core";
 
 const SVCallingAlgorithms = ["Tardis", "Delly", "Lumpy", "Manta", "Smoove"]
 
 const Outputs = (props) => {
+
     return (
+       
         <div style={{display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center"}}>
+         {console.log("Algorithms >>", props.algorithms)}
             <h3 class="bp3-heading">Outputs</h3>
 
             {props.isRunning === true ?       
             <div isOpen={true} keepChildrenMounted={true}>
-            <Pre>
-                {/* { SVCallingAlgorithms.map((algorithm, id) => 
-                    id < 3 ?
-                    <p key={id}>{${algorithm.toLowerCase()} running...\n${algorithm.toLowerCase()} completed.\n${algorithm.toLowerCase()} completed.}</p> 
-                    : <></>
-                    )} */}
-                    {props.logs}
-            </Pre>
+                <Pre>
+                    { props.algorithms.map((algorithm, id) => 
+                        id < 3 ?
+                            <p key={id}>
+                                {`${algorithm.toLowerCase()} running...\n`}
+                            </p> 
+                        :   <></>
+                        )}
+                        {/* {props.logs} */}
+                </Pre>
             </div>
             : props.isRunning === undefined ? <p>No outputs</p> :
             <>
                 <div style={{width:"50%"}}>
-                    { SVCallingAlgorithms.map((algorithm, id) =>  
+                    { props.algorithms.map((algorithm, id) =>  
                         <div style={{display:"flex", flexDirection:"row", marginTop:"2%",
                                     justifyContent:"space-between", alignItems:"center"}}>
                             <p key={id}>{algorithm.toLowerCase().concat("Output.vcf")}</p>

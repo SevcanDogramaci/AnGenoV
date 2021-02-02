@@ -1,13 +1,24 @@
+import React from 'react';
 import { useState } from 'react';
 import { Button, Menu, MenuItem, Popover, Tooltip, Position, Icon, Intent,
     PopoverPosition, FileInput} from "@blueprintjs/core";
+import Service from '../Calling/Service';
 
 const MergePage = () => {
-    const [VCFfileName, setVCFfileName] = useState("Choose VCF File");
+    const [VCFfile, setVCFfile] = useState(undefined);
     const [mergeTool, setMergeTool] = useState("Truvari");
 
     const updateMergeTool = (mergeTool) => {
         setMergeTool(mergeTool);
+    }
+
+    const handleFileChange = (event) => {
+        //console.log(event.target.files[0].path);
+        console.log(event.target.files[0])
+        if (event.target.files[0]) {
+            setVCFfile(event.target.files[0]);
+            //console.log(VCFfile.name, VCFfile.path);
+        }
     }
 
     return (
@@ -15,12 +26,10 @@ const MergePage = () => {
                         marginTop:"2.5%", justifyContent:"center"}}>
             <h3 class="bp3-heading"> Merge SV</h3>
             <p style={{marginTop:"2%"}}>Load your SVs in VCF format</p>
-            <div style={{display:"flex", flexDirection:"row",  alignItems:"center"}}> <FileInput buttonText="Choose" text={VCFfileName}  style={{margin:"2%"}}
-                           onInputChange={event => {
-                               if (event.target.files[0])
-                                    setVCFfileName(event.target.files[0].name);
-                               }}/>
-                <Tooltip content="At least 2 VCF files" position={Position.RIGHT} intent="warning">
+            <div style={{display:"flex", flexDirection:"row",  alignItems:"center"}}> 
+                    <FileInput buttonText="Browse" text={VCFfile == undefined ? "Choose file" : VCFfile.name}  style={{margin:"2%"}}
+                                onInputChange={handleFileChange}/>
+                <Tooltip content="At least 2 VCF files or 1 path file" position={Position.RIGHT} intent="warning">
                     <Icon icon="info-sign" intent="warning"/>
                 </Tooltip> </div>
 
@@ -34,7 +43,8 @@ const MergePage = () => {
                 <Button rightIcon="caret-down" text={mergeTool}/>
             </Popover>
 
-            <Button text="Merge" style={{marginTop:"4%"}}/>
+            <Button text="Merge" onClick={e => Service.runSurvivor(VCFfile.path).then(res => console.log(res))}
+                     style={{marginTop:"4%"}}/>
             <div style={{display:"flex", flexDirection:"row", marginTop:"2%"}}>
                 <Button text="Save Output"/>
                 &nbsp;&nbsp;&nbsp;

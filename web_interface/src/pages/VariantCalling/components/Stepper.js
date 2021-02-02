@@ -1,3 +1,4 @@
+import React from 'react';
 import StepButton from "./StepButton";
 
 const Stepper = (props) => {
@@ -11,7 +12,7 @@ const Stepper = (props) => {
                     return  <>
 
                             <StepButton isActive={props.activeStep === stepName} onClick={props.onStepClick} 
-                                    name={stepName} to="/calling"/>
+                                    key={id} name={stepName} to="/calling"/>
 
                             {(id != (props.steps.length-1)) &&
                             <hr style={{

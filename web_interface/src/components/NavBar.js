@@ -1,3 +1,4 @@
+import React from 'react';
 import {
     Button,
     Alignment,
@@ -17,7 +18,7 @@ const NavBar = () => {
             <NavbarHeading>AnGenoV</NavbarHeading>
         </NavbarGroup>
         <NavbarGroup align={Alignment.RIGHT}>
-            <NavButton to='/home' name="Home"/>
+            <NavButton to='/' name="Home"/>
             <NavButton to='/calling' name="Variant Calling"/>
             <NavButton to='/annotation' name="Variant Annotation"/>
             <NavbarDivider/>
