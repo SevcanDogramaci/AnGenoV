@@ -3,8 +3,9 @@ from pysam import VariantFile
 current_dir = pathlib.Path(__file__).parent.absolute()
 
 def get_variants(vcf_file_name) :
-    print(f"{current_dir}/{vcf_file_name}")
-    vcf_in = VariantFile(f"{current_dir}/{vcf_file_name}")  
+    #print(f"{current_dir}/{vcf_file_name}")
+    print(f"{vcf_file_name}")
+    vcf_in = VariantFile(f"{vcf_file_name}")  
     vcf_out = {}
     variants = []
 
@@ -17,7 +18,7 @@ def get_variants(vcf_file_name) :
         variant_info["alts"] = rec.alts
         variants.append(variant_info)
 
-    vcf_out["variants"] = variants[0:10]
+    vcf_out["variants"] = variants[0:]
     
     return vcf_out
 
