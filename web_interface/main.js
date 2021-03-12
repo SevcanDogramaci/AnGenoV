@@ -1,6 +1,6 @@
 const path = require('path')
 const url = require('url')
-const { app, BrowserWindow } = require('electron')
+const { app, BrowserWindow, ipcMain } = require('electron')
 
 let mainWindow
 
@@ -56,7 +56,7 @@ function createMainWindow() {
 			installExtension(REACT_DEVELOPER_TOOLS).catch((err) =>
 				console.log('Error loading React DevTools: ', err)
 			)
-			//mainWindow.webContents.openDevTools()
+			mainWindow.webContents.openDevTools()
 		}
 	})
 
@@ -79,3 +79,29 @@ app.on('activate', () => {
 
 // Stop error
 app.allowRendererProcessReuse = true
+
+
+// Used to listen logs to log files
+/* 
+ipcMain.on('log-file-request', (event, arg) => {
+
+	console.log(">> async log-file-request is triggered", arg);
+
+	var data = '';
+	const fs = require('fs');
+	const path = require('path');
+	const fileName = path.join(__dirname, 'deneme.txt');
+
+	const readStream = fs.createReadStream(fileName, {encoding: 'utf8', highWaterMark: 100});
+
+	readStream.on('data', function(chunk) {
+		data += chunk;
+		console.log("Data chunk >> ", chunk);
+		event.reply('log-file-reply', {"data": data, "finished": false});
+
+	}).on('end', function() {
+		
+		event.reply('log-file-reply', {"data": data, "finished": true});
+	});
+})
+ */
