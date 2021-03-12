@@ -1,0 +1,57 @@
+import axios from 'axios';
+
+export default class Service {
+
+    static async getVariants(fileName) {
+
+        const customAxiosInstance = axios.create({
+            baseURL: "http://127.0.0.1:5000/",
+          });
+
+        const response = await customAxiosInstance.get(`/get_variants?file=${fileName}`);
+
+        console.log("Variants >>", response.data.variants);
+        return response.data.variants;
+    }
+
+    static async runSurvivor(fileName) {
+
+        const customAxiosInstance = axios.create({
+            baseURL: "http://127.0.0.1:5000/",
+          });
+
+        const response = await customAxiosInstance.get(`/merge?file=${fileName}`);
+
+        console.log("Survivor response >>", response.data);
+        return response.data;
+    }
+
+    static async runDelly(files) {
+
+        console.log(files);
+
+        const customAxiosInstance = axios.create({
+            baseURL: "http://127.0.0.1:5000/",
+          });
+
+        const response = await customAxiosInstance.get(`/sv_calling?ref_file=${files.ref}&sample_file=${files.sample}`);
+
+        console.log("Delly response >>", response.data);
+        return response.data;
+    }
+
+
+    /* This function is used to view files by uploading when AnGenoV works on web browser. */
+    static async uploadFile(file) {
+
+        const config = {
+            headers: {
+                'content-type': 'multipart/form-data'
+            }
+        }
+
+        const response = await axios.post("/upload_file", file, config);
+        console.log("Response is ", response);
+        return response.data;
+    }
+}

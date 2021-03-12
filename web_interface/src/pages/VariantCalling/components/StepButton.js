@@ -1,5 +1,10 @@
-import { Classes, Button,} from "@blueprintjs/core";
+import React from 'react';
 import { NavLink } from "react-router-dom";
+import { 
+    Classes, 
+    Button
+} from "@blueprintjs/core";
+
 
 const StepButton = (props) => {
 

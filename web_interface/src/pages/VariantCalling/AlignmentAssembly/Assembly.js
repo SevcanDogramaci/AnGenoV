@@ -1,13 +1,23 @@
-import { useState } from 'react';
-import { Button, Menu, MenuItem, Popover, Tooltip, Position, Icon, Intent,
-    PopoverPosition, FileInput, Checkbox} from "@blueprintjs/core";
+import React, { useState } from 'react';
+import { 
+    Button, 
+    Menu, 
+    MenuItem, 
+    Popover, 
+    Tooltip, 
+    Position, 
+    Icon, 
+    Intent,
+    PopoverPosition, 
+    Checkbox
+} from "@blueprintjs/core";
 
 const AssemblyPage = () => {
     const [FASTQFileName, setFASTQfileName] = useState("Choose input files");
 
     return (
         <div style={{display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", marginTop:"2.5%"}}>
-            <h3 class="bp3-heading">Assembly</h3>
+            <h3 className="bp3-heading">Assembly</h3>
             <p style={{marginTop:"2%"}}>Load your sequence files </p>
 
             <div style={{display:"flex", flexDirection:"row",  alignItems:"center"}}> <Button text="Choose Files"/> &nbsp;&nbsp;
@@ -46,10 +56,7 @@ const AssemblyPage = () => {
             <Button text="Send Output into Alignment" style={{marginTop:"2%"}}/>
 
         </div>
-
-
     );
-
 }
 
 export default AssemblyPage;

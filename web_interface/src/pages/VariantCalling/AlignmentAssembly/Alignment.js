@@ -1,8 +1,16 @@
-import { useState} from 'react';
-import { Button, Checkbox, Tooltip, Position, Icon, Intent} from "@blueprintjs/core";
+import React, { useState } from 'react';
+import { 
+    Button, 
+    Checkbox, 
+    Tooltip, 
+    Position, 
+    Icon, 
+    Intent
+} from "@blueprintjs/core";
 
 const sequenceTypes = ["Illumina", "PacBio / Oxford Nanopore"]
-const sequenceInfo = {"Illumina" : "Short Read, uses BWA-MEM algorithm.", "PacBio / Oxford Nanopore" : "Long Read, uses Minimap2 algorithm."}
+const sequenceInfo = {"Illumina" : "Short Read, uses BWA-MEM algorithm.", 
+                      "PacBio / Oxford Nanopore" : "Long Read, uses Minimap2 algorithm."}
 
 const AlignmentPage = () => {
     const [FASTQFileName, setFASTQfileName] = useState("Choose a FASTQ File");
@@ -10,7 +18,7 @@ const AlignmentPage = () => {
 
     return (
         <div style={{display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", marginTop:"2.5%"}}>
-            <h3 class="bp3-heading">Alignment</h3>
+            <h3 className="bp3-heading">Alignment</h3>
             <p style={{marginTop:"2%"}}>Load your sequence files</p>
 
             <div style={{display:"flex", flexDirection:"row", marginTop:"3%", justifyContent:"space-between", alignItems:"center"}}>
@@ -34,7 +42,7 @@ const AlignmentPage = () => {
             <div style={{marginTop:"5%"}}>
                 { sequenceTypes.map((types, id) =>  {
                     return id < sequenceTypes.length ? 
-                    <div style={{display:"flex", flexDirection:"row"}}>   
+                    <div style={{display:"flex", flexDirection:"row"}} key={id}>   
                         <Checkbox key={id}>{types}</Checkbox>
                         &nbsp;&nbsp;
                         <Tooltip content={sequenceInfo[types]} position={Position.RIGHT} intent = {Intent.PRIMARY}>
