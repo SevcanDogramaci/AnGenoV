@@ -15,9 +15,10 @@ def hello_world():
 
 @app.route('/upload_file', methods = ['POST'])
 def upload_file():
-    #data = request.form # a multidict containing POST data
+
     if 'file' not in request.files:
         return('No file part')
+
     file = request.files['file'] 
     print(secure_filename(file.filename))
     print(file.read())
@@ -35,11 +36,12 @@ def runDelly():
     ref_file = request.args.get('ref_file')
     print("File names >> ", sample_file, ref_file)
     
-    #sv_calling.runDelly(ref_file, sample_file)
+    sv_calling.runDelly(ref_file, sample_file)
     return "delly finished"
 
 @app.route('/merge')
 def runSurvivor():
     file_name = request.args.get('file')
-    #merge.runSurvivor(file_name)
+    merge.runSurvivor(file_name)
+
     return f"survıvor received {file_name} and finished"

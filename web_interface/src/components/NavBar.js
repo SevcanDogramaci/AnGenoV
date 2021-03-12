@@ -23,7 +23,7 @@ const NavBar = () => {
             <NavButton to='/annotation' name="Variant Annotation"/>
             <NavbarDivider/>
             <a target="_blank" href="https://github.com/SevcanDogramaci/AnGenoV">
-            <Button text="Docs" icon="document" />
+                <Button text="Docs" icon="document" />
             </a>
         </NavbarGroup>
         </Navbar>

@@ -1,5 +1,4 @@
-import React from 'react';
-import {useState, useEffect} from "react";
+import React,  { useState, useEffect }  from 'react';
 import {
     Button,
     Menu,
@@ -30,7 +29,7 @@ const Inputs = (props) => {
 
         <div style={{display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center"}}>
 
-            <h3 class="bp3-heading">Input</h3>
+            <h3 className="bp3-heading">Input</h3>
 
             <p style={{marginTop:"2%"}}>Load your Input Files</p>
 

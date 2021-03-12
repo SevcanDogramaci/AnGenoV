@@ -1,8 +1,15 @@
-import React from 'react';
-import { useState } from 'react';
-import { Button, FileInput, Spinner } from "@blueprintjs/core";
-import { Column, Table, Cell } from "@blueprintjs/table";
-import axios from 'axios';
+import React, { useState } from 'react';
+import { 
+    Button, 
+    FileInput, 
+    Spinner 
+} from "@blueprintjs/core";
+import { 
+    Column, 
+    Table, 
+    Cell 
+} from "@blueprintjs/table";
+import Service from '../../services/Service';
 
 const VariantAnnotationPage = () => {
     const [VCFfileName, setVCFfileName] = useState("Choose File");
@@ -10,21 +17,13 @@ const VariantAnnotationPage = () => {
     const [isAnnotationDisabled, setAnnotationDisabled] = useState(false);
     const [VCFfile, setVCFfile] = useState(null);
 
-    async function getVariants(vcfFileName) {
-        const customAxiosInstance = axios.create({
-            baseURL: "http://127.0.0.1:5000/",
-          });
-
-        const response = await customAxiosInstance.get(`/get_variants?file=${vcfFileName}`);
-        console.log("Response is ", response.data.variants);
-        setAnnotationDisabled(false);
-        return response.data.variants;
-    }
-
     const handleAnnotation = () => {
         setAnnotationDisabled(true);
-        console.log(VCFfileName);
-        getVariants(VCFfile.path).then(result => setVariants(result));
+        Service.getVariants(VCFfile.path)
+            .then(result => {
+                setAnnotationDisabled(false);
+                setVariants(result);
+            });
     }
 
     const cellRenderer = (rowIndex, key) => {
@@ -33,10 +32,10 @@ const VariantAnnotationPage = () => {
     };
 
     const handleFileChange = (event) => {
-        console.log(event.target.files[0].path);
+        console.log("VCF file chosen >>", event.target.files[0].name);
+        
         setVCFfile(event.target.files[0])
         setVCFfileName(event.target.files[0].name);
-        console.log(VCFfileName);
     }
 
     return (
@@ -56,21 +55,19 @@ const VariantAnnotationPage = () => {
             <div style={{height:"400px", display:"flex", flexDirection:"column", alignItems:"center", 
                         marginTop:"1%", marginBottom:"5%", justifyContent:"flex-start"}}>
                 {(Object.keys(variants).length > 0) ?
-                <Table numRows={variants.length}>
-                    {
-                        Object.keys(variants[0]).map(
-                            (key, id) => {return <Column name={key} 
-                                                    cellRenderer={(r) => cellRenderer(r, key)}/>}
-                        )
-                    }
-                </Table> :
-                isAnnotationDisabled ? 
-                    <Spinner  /> :
-                    <p>No variants found</p>
+                    <Table numRows={variants.length}>
+                        {
+                            Object.keys(variants[0]).map(
+                                (key, id) => {return <Column name={key} 
+                                                        cellRenderer={(r) => cellRenderer(r, key)}/>}
+                            )
+                        }
+                    </Table> 
+                    : isAnnotationDisabled ? 
+                        <Spinner  /> :
+                        <p>No variants found</p>
                 }
             </div>
-
-
         </div>
     );
 }

@@ -22,8 +22,7 @@ const Stepper = (props) => {
                                         height:1,
                                         borderWidth: 0
                                     }} />}
-                            </>
-                            
+                            </>   
                 })
             }
         </div>

@@ -1,9 +1,16 @@
-import React from 'react';
-import { useState} from 'react';
-import { Button, Checkbox, Tooltip, Position, Icon, Intent} from "@blueprintjs/core";
+import React, { useState } from 'react';
+import { 
+    Button, 
+    Checkbox, 
+    Tooltip, 
+    Position, 
+    Icon, 
+    Intent
+} from "@blueprintjs/core";
 
 const sequenceTypes = ["Illumina", "PacBio / Oxford Nanopore"]
-const sequenceInfo = {"Illumina" : "Short Read, uses BWA-MEM algorithm.", "PacBio / Oxford Nanopore" : "Long Read, uses Minimap2 algorithm."}
+const sequenceInfo = {"Illumina" : "Short Read, uses BWA-MEM algorithm.", 
+                      "PacBio / Oxford Nanopore" : "Long Read, uses Minimap2 algorithm."}
 
 const AlignmentPage = () => {
     const [FASTQFileName, setFASTQfileName] = useState("Choose a FASTQ File");

@@ -1,7 +1,10 @@
 import React from 'react';
+import { 
+    ControlGroup
+} from "@blueprintjs/core";
+
 import Alignment from "./Alignment"
 import Assembly from "./Assembly"
-import { ControlGroup } from "@blueprintjs/core";
 
 const AlignmentAssemblyPage = () => {
     return (

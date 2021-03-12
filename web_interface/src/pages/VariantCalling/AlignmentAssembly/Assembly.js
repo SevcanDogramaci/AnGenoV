@@ -1,7 +1,16 @@
-import React from 'react';
-import { useState } from 'react';
-import { Button, Menu, MenuItem, Popover, Tooltip, Position, Icon, Intent,
-    PopoverPosition, FileInput, Checkbox} from "@blueprintjs/core";
+import React, { useState } from 'react';
+import { 
+    Button, 
+    Menu, 
+    MenuItem, 
+    Popover, 
+    Tooltip, 
+    Position, 
+    Icon, 
+    Intent,
+    PopoverPosition, 
+    Checkbox
+} from "@blueprintjs/core";
 
 const AssemblyPage = () => {
     const [FASTQFileName, setFASTQfileName] = useState("Choose input files");
@@ -47,10 +56,7 @@ const AssemblyPage = () => {
             <Button text="Send Output into Alignment" style={{marginTop:"2%"}}/>
 
         </div>
-
-
     );
-
 }
 
 export default AssemblyPage;
