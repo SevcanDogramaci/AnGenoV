@@ -26,20 +26,20 @@ export default class Service {
         return response.data;
     }
 
-    static async runDelly(files) {
-
-        console.log(files);
+    static async runSelectedTools(files, selectedTools) {
+        console.log(files, selectedTools.toArray());
 
         const customAxiosInstance = axios.create({
             baseURL: "http://127.0.0.1:5000/",
           });
 
-        const response = await customAxiosInstance.get(`/sv_calling?ref_file=${files.ref}&sample_file=${files.sample}`);
+        selectedTools = JSON.stringify(selectedTools.toArray());
 
-        console.log("Delly response >>", response.data);
+        const response = await customAxiosInstance.get(`/sv_calling/RST?ref_file=${files.ref}&sample_file=${files.sample}&selected_tools=${selectedTools}`);
+
+        console.log("ST response >>", response.data);
         return response.data;
-    }
-
+  }
 
     /* This function is used to view files by uploading when AnGenoV works on web browser. */
     static async uploadFile(file) {

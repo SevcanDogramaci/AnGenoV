@@ -1,17 +1,17 @@
+
+# third-party imports
+from flask import Flask, render_template, request, redirect, abort, flash, url_for, jsonify
+from werkzeug.utils import secure_filename
+from flask_cors import CORS
+
+# local application imports
+from dto.message_response import *
 import variant_reader
 import sv_calling
 import merge
 
-from flask import Flask, render_template, request, redirect, abort, flash, url_for
-from werkzeug.utils import secure_filename
-from flask_cors import CORS
-
 app = Flask(__name__)
 CORS(app)
-
-@app.route('/world')
-def hello_world():
-    return 'Hello World :)!'
 
 @app.route('/upload_file', methods = ['POST'])
 def upload_file():
@@ -30,18 +30,33 @@ def get_variants():
     variants = variant_reader.get_variants(vcf_file_name)
     return variants
 
-@app.route('/sv_calling')
-def runDelly():
+@app.route('/sv_calling/RST')
+def runSelectedTools():
+    import json
+
     sample_file = request.args.get('sample_file')
     ref_file = request.args.get('ref_file')
+    selected_tools = request.args.get('selected_tools')
     print("File names >> ", sample_file, ref_file)
-    
-    sv_calling.runDelly(ref_file, sample_file)
-    return "delly finished"
+    print("Selected Tools >> ", selected_tools)
+
+    selected_tools = json.loads(selected_tools)
+    messages, files = sv_calling.runSelectedTools(ref_file, sample_file, selected_tools)
+
+    response = MessageResponse(MessageType.SUCCESS, 
+                                messages, 
+                                files)
+    print(response)
+
+    return jsonify(response.get())
 
 @app.route('/merge')
 def runSurvivor():
     file_name = request.args.get('file')
-    merge.runSurvivor(file_name)
 
-    return f"survıvor received {file_name} and finished"
+    messages, files = merge.runSurvivor(file_name)
+    response = MessageResponse(MessageType.SUCCESS, 
+                                messages, 
+                                files)
+    print(response)
+    return jsonify(response.get())
