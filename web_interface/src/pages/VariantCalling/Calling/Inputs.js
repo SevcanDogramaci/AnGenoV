@@ -1,29 +1,24 @@
-import React,  { useState, useEffect }  from 'react';
+import React,  { useState, useContext }  from 'react';
 import {
     Button,
     Menu,
     MenuItem,
     Popover,
     PopoverPosition,
-    Checkbox,
-    FileInput
+    FileInput,
+    RadioGroup,
+    Radio
 } from "@blueprintjs/core";
+
+import { CallingContext } from './CallingContext';
+
+const { Set } = require('immutable');
 
 const Inputs = (props) => {
 
-    const [readOption, setReadOption] = useState("Illumina");
+    const context = useContext(CallingContext);
     const [sampleFile, setSampleFile] = useState(undefined);
     const [referenceFile, setReferenceFile] = useState(undefined);
-
-    useEffect(() => {
-        props.updateReadOption(readOption);
-    }, [])
-
-    const updateReadOption = readOption => {
-        console.log(`${readOption} clicked`);
-        setReadOption(readOption);
-        props.updateReadOption(readOption);
-    }
 
     return (
 
@@ -48,17 +43,32 @@ const Inputs = (props) => {
             <p style={{marginTop:"10%"}}>Select Your Method :</p>
             <Popover  content={
                 <Menu>
-                    <MenuItem onClick={e => {updateReadOption("Illumina")}} text="Illumina" />
-                    <MenuItem onClick={e => {updateReadOption("PacBio")}} text="PacBio/Oxford Nanopore"/>
+                    <MenuItem onClick={e => {
+                                            if(context.readOption !== "Illumina") {
+                                                console.log("Changing");
+                                                context.setReadOption("Illumina"); 
+                                                context.setCheckedCallers(Set())
+                                            }
+                                            }} text="Illumina" />
+                    <MenuItem onClick={e => {
+                                            if(context.readOption !== "PacBio") {
+                                                console.log("Changing");
+                                                context.setReadOption("PacBio"); 
+                                                context.setCheckedCallers(Set())
+                                            }
+                                        }} text="PacBio/Oxford Nanopore"/>
                 </Menu>} position={PopoverPosition.RIGHT_TOP}>
-                <Button rightIcon="caret-down" text={readOption}/>
+                <Button rightIcon="caret-down" text={context.readOption}/>
             </Popover>
 
             <div style={{marginTop: "10%"}}>
-                <Checkbox label="SNP Calling"/>
-                <Checkbox label="Genotyping" />
-                <Checkbox label="SV Calling" />
+                <RadioGroup>
+                    <Radio label="SNP Calling"/>
+                    <Radio label="Genotyping"/>
+                    <Radio label="SV Calling"/>
+                </RadioGroup>
             </div>
+
         </div>
 
     );
