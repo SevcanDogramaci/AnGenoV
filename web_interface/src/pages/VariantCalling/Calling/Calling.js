@@ -1,72 +1,93 @@
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { 
     Checkbox, 
-    Button, 
+    Button,
 } from "@blueprintjs/core";
 
 import Service from "../../../services/Service";
+import { CallingContext } from './CallingContext';
+import SVCallerTool from './components/SVCallerTool';
+import NewSVCallerTool from './components/NewSVCallerTool';
 
-const smallReadSVCallers = ["Tardis", "Delly", "Lumpy", "Manta", "Smoove"];
-const longReadSVCallers = [ "Svim", "CuteSV", "Sniffles"];
 const { ipcRenderer } = require('electron');
 
-async function sleep() {
-    await new Promise(resolve => setTimeout(resolve, 2500)); // to imitate running
-}
-
 const Calling = (props) => {
-    const SVCallers = props.readOption == "Illumina" ? smallReadSVCallers : longReadSVCallers;
-    const [checkedCallers, updateCheckedCallers] = useState([]);
+    const context = useContext(CallingContext);
 
     async function updateRunning(e) {
         console.log("Files for run >>", props.filesForCall);
         console.log("Running...");
 
-        props.updateRunning(true);
-        ipcRenderer.send('log-file-request');
+        context.setRunning(true);
 
-        console.log("After ipcSend");
+        console.log("Checked callers >> ", context.checkedCallers);
 
-        Service.runDelly(props.filesForCall)
+        Service.runSelectedTools(props.filesForCall, context.checkedCallers)
             .then(response => { 
-                sleep().then(response => {
-                    props.updateRunning(false);
+                    console.log("Response >> ", response);
+                    context.setResponseMessages(response);
+                    context.setRunning(false);
                 });
-            })
     }
 
     const handleSVCallerChecked = (e, name) => {
         let is_checked = e.target.checked;
 
         if (is_checked) 
-            checkedCallers.push(name);
+            context.setCheckedCallers(context.checkedCallers.add(name));
         else 
-            updateCheckedCallers(checkedCallers.filter(item => item !== name))
+            context.setCheckedCallers(context.checkedCallers.delete(name));
 
-        console.log("CheckedCallers >>", checkedCallers);
-        props.updateCallers(checkedCallers);
+        console.log("CheckedCallers >>", context.checkedCallers);
     }
+
+    const refreshPage = () => {
+        ipcRenderer.invoke("read-config-file")
+            .then((result) => {
+                console.log(result);
+
+                let tools = result["tools"];
+                let filteredTools = {};
+
+                Object.keys(tools)
+                    .filter(tool =>  (tools[tool].readType == context.readOption))
+                    .forEach(tool => filteredTools[tool] = tools[tool]);
+
+                setSVCallerTools(filteredTools);
+            })
+    }
+
+    const [SVCallerTools, setSVCallerTools] = useState(null);
+
+    useEffect(() => { 
+        refreshPage();
+    }, [, context.readOption]);
     
     return (
         
         <div style={{display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center"}}>
-            {console.log("Read option >>", props.readOption)}
+            {console.log("Read option >>", context.readOption)}
             
             <h3 className="bp3-heading">SV Calling</h3>
             <p>Choose the algorithms you want to run :</p>
 
-            <div>
-                { SVCallers.map((algorithm, id) =>  {
-                    return id < SVCallers.length ? 
-                        <Checkbox onChange={e => handleSVCallerChecked(e, algorithm)} key={id}>
-                            {algorithm}
-                        </Checkbox> 
-                        : <></> }
-                )}
+            <div style={{display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center"}}>
+                <div>
+                    { SVCallerTools && 
+                        Object.keys(SVCallerTools).map((key, id) =>  {
+                            return <Checkbox onChange={e => handleSVCallerChecked(e, key)} key={key} style={{display:"flex", flexDirection:"row", alignItems:"center"}}>
+                                    <SVCallerTool name={key} tool={SVCallerTools[key]} onRefresh={refreshPage}/>
+                                </Checkbox> }
+                    )}
+                </div>
             </div>
 
-            <div style={{width: "30%", marginTop: "1%"}}>
-                <Button fill={true} icon="caret-right" onClick={e => updateRunning(e)}> Run </Button>
+            <div style={{display:"flex", flexDirection:"row", alignSelf:"flex-end", width:"25%"}}>
+                    <NewSVCallerTool onRefresh={refreshPage}/>
+            </div>
+
+            <div style={{width: "30%", marginTop: "10%"}}>
+                <Button disabled={context.running} fill={true} icon="caret-right" onClick={e => updateRunning(e)}> Run </Button>
             </div>
         </div>
     );
