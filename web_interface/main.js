@@ -1,6 +1,6 @@
 const path = require('path')
 const url = require('url')
-const { app, BrowserWindow, ipcMain } = require('electron')
+const { app, BrowserWindow, ipcMain, dialog } = require('electron')
 
 let mainWindow
 
@@ -80,6 +80,145 @@ app.on('activate', () => {
 // Stop error
 app.allowRendererProcessReuse = true
 
+// used to delete a file
+ipcMain.handle('delete-config-file', async (event, arg) => {
+	console.log("delete-config-file is triggered", arg);
+
+	const fs = require('fs');
+	const path = require('path');
+	const { toolName }  = arg;
+	
+	let cwd = process.cwd();
+	cwd = cwd.substring(0, cwd.lastIndexOf("/"));
+	cwd = path.join(cwd, 'config', 'toolConfigs.json');
+
+	const file = require(cwd);
+	delete file.tools[toolName];
+
+	fs.writeFile(cwd, JSON.stringify(file, null, 2), function writeJSON(err) {
+		if (err) return console.log(err);
+		
+		console.log("Writing to ", cwd);
+	});
+
+	return "Successfully deleted !";
+})
+
+
+// used to update a file
+ipcMain.handle('update-config-file', async (event, arg) => {
+	console.log("update-config-file is triggered", arg);
+
+	const fs = require('fs');
+	const path = require('path');
+	const { toolName, params, outName, readType  }  = arg;
+	
+	let cwd = process.cwd();
+	cwd = cwd.substring(0, cwd.lastIndexOf("/"));
+	cwd = path.join(cwd, 'config', 'toolConfigs.json');
+
+	console.log(params, cwd);
+
+	const file = require(cwd);
+
+	if(params == null) {
+		file.tools[toolName].lastUsedParams = file.tools[toolName].defaultParams;
+	} else {
+		if(file.tools[toolName]){
+            file.tools[toolName].lastUsedParams = params;
+			file.tools[toolName].outputName = outName;
+		} else {
+			let newToolConfig = {
+				"name": toolName,
+				"outputName": `output${toolName}`,
+				"readType": readType,
+				"defaultParams": params,
+				"lastUsedParams": params,
+			}
+			file.tools[toolName] = newToolConfig;
+		}
+	}
+
+	fs.writeFile(cwd, JSON.stringify(file, null, 2), function writeJSON(err) {
+		if (err) return console.log(err);
+		
+		console.log("Writing to ", cwd);
+	});
+
+	return "Successfully updated !";
+})
+
+
+// used to read a file
+ipcMain.handle('read-config-file', async (event, arg) => {
+	console.log("read-config-file is triggered", arg);
+
+	const fs = require('fs');
+	const path = require('path');
+
+	let cwd = process.cwd();
+	cwd = cwd.substring(0, cwd.lastIndexOf("/"));
+	cwd = path.join(cwd, 'config', 'toolConfigs.json');
+
+	let rawdata = fs.readFileSync(cwd);
+	let tools = JSON.parse(rawdata);
+	console.log("Tools read >> ", tools);
+
+	return tools;
+})
+
+// Used to view files
+ipcMain.on('view-file', (event, arg) => {
+	console.log("view-file is triggered", arg);
+
+	const fileToOpen  = arg;
+	const { shell } = require('electron');
+
+	if (fileToOpen) {
+		try {
+			shell.openPath(fileToOpen);
+		} catch(error) {
+			console.log(error.message)
+		}
+	} else {
+		throw Error
+	}
+
+})
+
+// Used to save files
+ipcMain.on('show-open-dialog', (event, arg) => {
+
+	console.log("show-open-dialog is triggered", arg);
+	const { files } = arg;
+
+	dialog.showOpenDialog({ properties: ['openDirectory', 'createDirectory'] })
+	    .then(response => {
+			console.log(response);
+			
+			const fs = require("fs");
+			const path = require("path");
+
+			files.forEach(element => {
+				const splittedFileName = element.split("/");
+				const fileName = splittedFileName[splittedFileName.length - 1];
+				const currentPath = path.join(element);
+				const destinationPath = path.join(response.filePaths[0], fileName);
+
+				console.log(element, fileName, currentPath, destinationPath);
+	
+				fs.rename(currentPath, destinationPath, function (err) {
+					console.log("In renaming !");
+					if (err) {
+						throw err
+					} else {
+						console.log("Successfully moved the file!");
+					}
+				});
+			});
+		});
+
+})
 
 // Used to listen logs to log files
 /* 
