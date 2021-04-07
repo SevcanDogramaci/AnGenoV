@@ -20,14 +20,14 @@ def runSurvivor(file_name):
 
     with open("temp/merge/mergefile", "r") as f:
         data = f.read()
-        with open("mergefile", "w") as w:
+        with open("temp/merge/mergefile", "w") as w:
             w.write(data[:-1])
 
 
-    argsSurvivor = ("SURVIVOR", "merge", "mergefile", "1000", "2", "1", "1", "0", "30", "temp/merge/merged.vcf")
+    argsSurvivor = ("SURVIVOR", "merge", "temp/merge/mergefile", "1000", "2", "1", "1", "0", "30", "temp/merge/merged.vcf")
     popen=subprocess.Popen(argsSurvivor)
     popen.wait()
-
+    os.remove("temp/merge/mergefile")
     files.append(os.getcwd() + "/temp/merge")
     responseMessages.append("Merging is finished successfully\n")
 
