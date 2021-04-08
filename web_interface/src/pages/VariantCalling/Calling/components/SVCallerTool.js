@@ -68,7 +68,7 @@ const SVCallerTool = (props) => {
                         <p style={{margin:0}}>Parameters and their usage can be found </p> 
                         <p style={{margin:0}}>on the related tool's documentation page </p> 
                         <p style={{margin:5, fontSize:12, fontWeight:"bold"}}>Output Name: 
-                            <input class="bp3-input" fill={true} small={true} defaultValue={tool.outputName} onChange={e => updateOutputName(e)}/>
+                            <input className="bp3-input" fill={true} small={true} defaultValue={tool.outputName} onChange={e => updateOutputName(e)}/>
                         </p>
                         <TextArea fill={true} small={true} growVertically={true} defaultValue={tool.lastUsedParams} onChange={e => updateParams(e)}/>
                     </div>

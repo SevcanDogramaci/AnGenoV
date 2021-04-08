@@ -71,6 +71,12 @@
       "outputName": "",
       "defaultParams": "",
       "lastUsedParams": ""
+    },
+    "Survivor": {
+      "name": "Survivor",
+      "outputName": "mergeDeneme",
+      "defaultParams": "SURVIVOR merge temp/merge/mergefile 1000 2 1 1 0 30 temp/merge/merged.vcf",
+      "lastUsedParams": "SURVIVOR merge temp/merge/mergefile 2000 2 1 1 0 30 ${outputName}"
     }
   }
 }

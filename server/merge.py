@@ -23,9 +23,14 @@ def runSurvivor(file_name):
         with open("temp/merge/mergefile", "w") as w:
             w.write(data[:-1])
 
+    import json
 
-    argsSurvivor = ("SURVIVOR", "merge", "temp/merge/mergefile", "1000", "2", "1", "1", "0", "30", "temp/merge/merged.vcf")
-    popen=subprocess.Popen(argsSurvivor)
+    with open(os.getcwd()+"/../config/toolConfigs.json") as json_file:
+        data = json.load(json_file)
+        outputFile = "temp/merge/" + data["tools"]["Survivor"]["outputName"] + ".vcf"
+        args = data["tools"]["Survivor"]["lastUsedParams"].strip().replace("${outputName}", outputFile).split(" ")
+
+    popen=subprocess.Popen(args)
     popen.wait()
     os.remove("temp/merge/mergefile")
     files.append(os.getcwd() + "/temp/merge")

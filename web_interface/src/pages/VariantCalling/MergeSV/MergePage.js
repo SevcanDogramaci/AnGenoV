@@ -4,7 +4,10 @@ import {
     Tooltip, 
     Position, 
     Icon,
-    FileInput
+    FileInput,
+    Popover,
+    TextArea,
+    Intent
 } from "@blueprintjs/core";
 import { 
     Column, 
@@ -17,10 +20,8 @@ import ReactDOM from 'react-dom';
 const { Set } = require('immutable')
 const { ipcRenderer } = require('electron');
 
-const MergePage = () => {
+const MergePage = (props) => {
     const [files, setFileList] = useState(Set())
-    
-    const [filePaths, setFilePaths] = useState("");
     const [responseMessage, setResponseMessage] = useState(undefined);
     const [running, setRunning] = useState(false);
 
@@ -37,7 +38,6 @@ const MergePage = () => {
         setFileList(newList);
         console.log(files);
     }
-
 
     const handleFileChange = (event) => {
         console.log("onInputChange", event.target.files)
@@ -67,6 +67,55 @@ const MergePage = () => {
             )
     }
 
+   
+    
+    const [tool, setTool]  = useState("");
+    const [params, setParams] = useState(tool.lastUsedParams);
+    const [outName, setOutName] = useState(tool.outputName);
+    
+
+    const [tooglePopover, setTogglePopover] = useState(false);
+    
+    const updateToolConfig = (params, outName) => {
+
+        const config = {
+            "toolName": "Survivor",
+            "params": params,
+            "outName": outName
+        }
+
+        console.log("Config >> ", config);
+        
+        ipcRenderer.invoke("update-config-file", config)
+            .then((result) => {
+                console.log(result);
+                setTogglePopover(false);
+                refreshPage();
+        })
+    }
+
+    const resetParamsToDefault = () => { updateToolConfig(null); }
+    const saveParamsToConfig = () => { updateToolConfig(params, outName); }
+    const closeWithoutSave = (event) => { setTogglePopover(true); setParams(tool.lastUsedParams); }
+    const updateOutputName = (event) => { event.target.value !== "" ? setOutName(event.target.value) : setOutName(tool.outputName) }
+    const updateParams = (event) => { event.target.value !== "" ? setParams(event.target.value) : setParams(tool.lastUsedParams) }
+
+    const refreshPage = () => {
+        ipcRenderer.invoke("read-config-file")
+            .then((result) => {
+                let r = result["tools"];
+                setTool(r["Survivor"]);
+            })
+    }
+
+    const [SVCallerTools, setSVCallerTools] = useState(null);
+
+    useEffect(() => { 
+        refreshPage();
+    }, []);
+
+
+
     return (
         <div id ="div" style={{display:"flex", flexDirection:"column", alignItems:"center", 
                         marginTop:"2.5%", justifyContent:"center"}}>
@@ -74,16 +123,42 @@ const MergePage = () => {
             <p style={{marginTop:"2%"}}>Load your SVs in VCF format</p>
 
             <div style={{display:"flex", flexDirection:"row",  alignItems:"center"}}> 
-                <FileInput id="fileInput" buttonText="Browse" style={{margin:"2%"}} text={filePaths}
+                <FileInput id="fileInput" buttonText="Browse" style={{margin:"2%"}}
                     onInputChange={handleFileChange} inputProps={{multiple: true}}
                     style={{width:"600px"}}/>
                 <Tooltip content="At least 2 VCF files" position={Position.RIGHT} intent="warning">
                     <Icon icon="info-sign" intent="warning"/>
                 </Tooltip> 
+
+                <Popover position={'right-top'} isOpen={tooglePopover} usePortal={true} canEscapeKeyClose={true}>            
+                <Button minimal={true} small={true} icon="settings" style={{marginLeft: 5}} onClick={closeWithoutSave}/>
+                
+                <div style={{display:"flex", flexDirection:"column", justifyContent: "center", padding: 10}}> 
+                    <div style={{display: "flex", alignItems: "center", flexDirection: "row", justifyContent: "space-between" }}>
+                        <p style={{fontWeight: "bold", margin:0 }}>{tool.name} Parameters</p>
+                        <Button minimal={true} small={true} icon="small-cross" onClick={e => setTogglePopover(false)}/>
+                    </div>
+
+                    <div style={{display:"flex", flexDirection:"column", alignItems: "left", justifyContent: "center"}}>
+                        <p style={{margin:5, fontSize:12, fontWeight:"bold"}}>Output Name: 
+                            <input className="bp3-input" fill={true} small={true} defaultValue={tool.outputName} onChange={e => updateOutputName(e)}/>
+                        </p>
+                        <TextArea fill={true} small={true} growVertically={true} defaultValue={tool.lastUsedParams} onChange={e => updateParams(e)}/>
+                    </div>
+
+                    <div style={{display: "flex", alignItems: "center",  justifyContent: "center"}}>
+                        <div>
+                            <Button minimal={true} small={true} intent={Intent.SUCCESS} icon="saved" style={{margin: 5}} onClick={saveParamsToConfig}>Save</Button>
+                            <Button minimal={true} small={true} intent={Intent.DANGER} icon="refresh" style={{margin: 5}} onClick={resetParamsToDefault}>Reset</Button>
+                        </div>
+                    </div>
+                </div>
+            </Popover>
             </div>
             <div style={{height:"25%", display:"flex", flexDirection:"column", alignItems:"center", 
                         marginTop:"1%", marginBottom:"5%", justifyContent:"flex-start"}}>
                 {console.log(files.size)}
+                {console.log(tool)}
                 {(files.size > 0) ?
                     <ul>
                     {files.map((item) => (
