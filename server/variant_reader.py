@@ -23,4 +23,19 @@ def get_variants(vcf_file_name) :
     
     return vcf_out
 
+def filter_variants_by_id(vcf_file_name, ids):
+    variants = get_variants(vcf_file_name)["variants"]
+    filtered_variants = []
+
+    for variant in variants:
+
+        if variant["id"] in ids:
+            filtered_variants.append(variant)
+
+    print("Filtered variants >> ", filtered_variants)
+    
+    return filtered_variants
+
+    
+
 
