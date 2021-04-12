@@ -8,6 +8,7 @@ from flask_cors import CORS
 from dto.message_response import *
 import variant_reader
 import sv_calling
+import annotation
 import merge
 
 app = Flask(__name__)
@@ -29,6 +30,18 @@ def get_variants():
     vcf_file_name = request.args.get('file')
     variants = variant_reader.get_variants(vcf_file_name)
     return variants
+
+@app.route('/annotate')
+def annotate_variants():
+    import json
+
+    vcf_file_name = request.args.get('file')
+    selected_variant_ids = request.args.get('ids')
+    selected_variant_ids = json.loads(selected_variant_ids)
+    print("Selected Variant Ids >> ", type(selected_variant_ids))
+
+    annotated_variants = annotation.annotate_variants_by_id(vcf_file_name, selected_variant_ids)
+    return jsonify(annotated_variants)
 
 @app.route('/sv_calling/RST')
 def runSelectedTools():

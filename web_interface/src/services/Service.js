@@ -14,6 +14,21 @@ export default class Service {
         return response.data.variants;
     }
 
+    static async annotateSelectedVariants(fileName, selectedVariantIds) {
+
+        const customAxiosInstance = axios.create({
+            baseURL: "http://127.0.0.1:5000/",
+          });
+
+        selectedVariantIds = JSON.stringify(selectedVariantIds.toArray());
+
+        const response = await customAxiosInstance.get(`/annotate?file=${fileName}&ids=${selectedVariantIds}`);
+
+        console.log("Filtered Variants >>", response.data);
+
+        return response.data.variants;
+    }
+
     static async runSurvivor(fileName) {
 
         const customAxiosInstance = axios.create({
