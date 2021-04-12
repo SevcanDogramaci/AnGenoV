@@ -55,7 +55,7 @@ def runSelectedTools():
 
     selected_tools = json.loads(selected_tools)
     messages, files = sv_calling.runSelectedTools(ref_file, sample_file, selected_tools)
-
+    
     response = MessageResponse(MessageType.SUCCESS, 
                                 messages, 
                                 files)

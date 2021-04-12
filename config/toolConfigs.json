@@ -3,13 +3,15 @@
     "Tardis": {
       "name": "Tardis",
       "readType": "Illumina",
+      "svType": "SV Calling",
       "outputName": "outputTardis",
       "defaultParams": "tardis -i ${alignedFile} --ref ${referenceFile} --sonic human_g1k_v37.sonic --out ${outputName}",
-      "lastUsedParams": "tardis -i ${alignedFile} --ref ${referenceFile} --sonic human_g1k_v37.sonic --out ${outputName}"
+      "lastUsedParams": "tardis -i ${alignedFile} --ref ${referenceFile} --sonic human_g1k_v37.sonic --out ${outputName} --no-mei"
     },
     "Delly": {
       "name": "Delly",
       "readType": "Illumina",
+      "svType": "SV Calling",
       "outputName": "outputDelly",
       "defaultParams": "delly call -o ${outputName} -g ${referenceFile} ${alignedFile}",
       "lastUsedParams": "delly call -o ${outputName} -g ${referenceFile} ${alignedFile}"
@@ -17,13 +19,23 @@
     "Manta": {
       "name": "Manta",
       "readType": "Illumina",
+      "svType": "SV Calling",
       "outputName": "outputManta",
       "defaultParams": "configManta.py --bam ${alignedFile} --referenceFasta ${referenceFile} --runDir ${outputName}, ${outputName}/runWorkflow.py",
       "lastUsedParams": "configManta.py --bam ${alignedFile} --referenceFasta ${referenceFile} --runDir ${outputName}, ${outputName}/runWorkflow.py"
     },
+    "TIDDIT": {
+      "name": "TIDDIT",
+      "readType": "Illumina",
+      "svType": "SV Calling",
+      "outputName": "outputTIDDIT",
+      "defaultParams": "python TIDDIT.py --sv -o ${outputName} --bam ${alignedFile} --ref ${referenceFile}",
+      "lastUsedParams": "TIDDIT.py --sv -o ${outputName} --bam ${alignedFile} --ref ${referenceFile}"
+    },
     "SVIM": {
       "name": "SVIM",
       "readType": "PacBio",
+      "svType": "SV Calling",
       "outputName": "outputSVIM",
       "defaultParams": "svim alignment ${outputName} ${alignedFile} ${referenceFile}",
       "lastUsedParams": "svim alignment ${outputName} ${alignedFile} ${referenceFile}"
@@ -31,6 +43,7 @@
     "CuteSV": {
       "name": "CuteSV",
       "readType": "PacBio",
+      "svType": "SV Calling",
       "outputName": "outputCuteSV",
       "defaultParams": "cuteSV ${alignedFile} ${referenceFile} ${outputName}.vcf .",
       "lastUsedParams": "cuteSV ${alignedFile} ${referenceFile} ${outputName}.vcf ."
@@ -38,9 +51,32 @@
     "Sniffles": {
       "name": "Sniffles",
       "readType": "PacBio",
+      "svType": "SV Calling",
       "outputName": "outputSniffles",
       "defaultParams": "sniffles -m ${alignedFile} -v ${outputName}.vcf",
       "lastUsedParams": "sniffles -m ${alignedFile} -v ${outputName}.vcf"
+    },
+    "Strelka": {
+      "name": "Strelka",
+      "readType": "Illumina",
+      "svType": "SNP / INDEL",
+      "outputName": "outputStrelka",
+      "defaultParams": "configureStrelkaGermlineWorkflow.py --bam ${alignedFile} -referenceFasta ${referenceFile} --runDir ${outputName} -m local -j 20",
+      "lastUsedParams": "configureStrelkaGermlineWorkflow.py --bam ${alignedFile} -referenceFasta ${referenceFile} --runDir ${outputName} -m local -j 20"
+    },
+    "GATK": {
+      "name": "GATK",
+      "readType": "Illumina",
+      "svType": "SNP / INDEL",
+      "outputName": "",
+      "defaultParams": "",
+      "lastUsedParams": ""
+    },
+    "Survivor": {
+      "name": "Survivor",
+      "outputName": "mergeDeneme",
+      "defaultParams": "SURVIVOR merge temp/merge/mergefile 1000 2 1 1 0 30 temp/merge/merged.vcf",
+      "lastUsedParams": "SURVIVOR merge temp/merge/mergefile 2000 2 1 1 0 30 ${outputName}"
     }
   }
 }

@@ -50,7 +50,7 @@ const Calling = (props) => {
                 let filteredTools = {};
 
                 Object.keys(tools)
-                    .filter(tool =>  (tools[tool].readType == context.readOption))
+                    .filter(tool =>  (tools[tool].readType == context.readOption && tools[tool].svType == context.svType ))
                     .forEach(tool => filteredTools[tool] = tools[tool]);
 
                 setSVCallerTools(filteredTools);
@@ -62,6 +62,9 @@ const Calling = (props) => {
     useEffect(() => { 
         refreshPage();
     }, [, context.readOption]);
+    useEffect(() => { 
+        refreshPage();
+    }, [, context.svType]);
     
     return (
         

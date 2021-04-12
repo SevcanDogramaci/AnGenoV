@@ -7,7 +7,8 @@ import {
     PopoverPosition,
     FileInput,
     RadioGroup,
-    Radio
+    Radio,
+    ContextMenuTarget
 } from "@blueprintjs/core";
 
 import { CallingContext } from './CallingContext';
@@ -60,14 +61,35 @@ const Inputs = (props) => {
                 </Menu>} position={PopoverPosition.RIGHT_TOP}>
                 <Button rightIcon="caret-down" text={context.readOption}/>
             </Popover>
-
-            <div style={{marginTop: "10%"}}>
-                <RadioGroup>
-                    <Radio label="SNP Calling"/>
-                    <Radio label="Genotyping"/>
-                    <Radio label="SV Calling"/>
+            
+             <div style={{marginTop: "10%"}}>
+                <RadioGroup selectedValue={context.svType} onChange={(e) => {  context.setSvType(e.target.value); 
+                                                context.setCheckedCallers(Set());
+                                                console.log("on change")
+                                            }} >
+                     
+                    <Radio label="SNP / INDEL" value="SNP / INDEL"/>
+                    <Radio label="Genotyping" value="Genotyping"/>
+                    <Radio label="SV Calling" value="SV Calling"/>
                 </RadioGroup>
-            </div>
+            </div> 
+
+            {/* <div style={{marginTop: "10%"}}>
+                <RadioGroup>
+                    <Radio label="SNP Calling" onChange={e => {
+                                                context.setSvType("SNP Calling"); 
+                                                context.setCheckedCallers(Set())
+                                            }}/>
+                    <Radio label="Genotyping" onChange={e => {
+                                                context.setSvType("Genotyping"); 
+                                                context.setCheckedCallers(Set())
+                                            }}/>
+                    <Radio label="SV Calling" onChange={e => {
+                                                context.setSvType("SV Calling"); 
+                                                context.setCheckedCallers(Set())
+                                            }}/>
+                </RadioGroup>
+            </div> */}
 
         </div>
 
