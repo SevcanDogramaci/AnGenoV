@@ -1,52 +1,53 @@
-import React, { useState } from 'react'
-const { Set, List } = require('immutable');
+import React, { useReducer, useState } from 'react';
 
-export const CallingContext = React.createContext(["light", () => {}]);
+import { Set } from 'immutable';
+
+import { CallingToolReducer } from './CallingReducer';
+
+export const CallingContext = React.createContext(['light', () => {}]);
 
 const CallingContextProvider = (props) => {
+	const [callerToolsInfo, setCallerToolsInfo] = useReducer(
+		CallingToolReducer,
+		{
+			svType: 'SV Calling',
+			readOption: 'Illumina',
+			checkedCallers: Set(),
+		}
+	);
 
-    const [running, setRunning] = useState(undefined);
-    const [readOption, setReadOption] = useState("Illumina");
-    const [svType, setSvType] = useState("SV Calling");
+	const [runningInfo, setRunningInfo] = useState({
+		running: false,
+		responseMessages: undefined,
+	});
 
-    const [sampleFile, setSampleFile] = useState(undefined);
-    const [referenceFile, setReferenceFile] = useState(undefined);
-    const [checkedCallers, setCheckedCallers] = useState(Set()); 
-    const [responseMessages, setResponseMessages] = useState(null)
+	const [sampleFile, setSampleFile] = useState(undefined);
+	const [referenceFile, setReferenceFile] = useState(undefined);
 
-    const handleRunningChange = (isRunning) => setRunning(isRunning);
-    const handleReadOptionChange = (readOption) => setReadOption(readOption);
-    const handleSvTypeChange = (svType) => setSvType(svType);
-    const handleSampleFileChange = (sampleFile) => setSampleFile(sampleFile);
-    const handleReferenceFileChange = (referenceFile) => setReferenceFile(referenceFile);
-    const handleCheckedCallersChange = (newCheckedCallers) => {
-        if(running === false)
-            setRunning(undefined);
-        setCheckedCallers(newCheckedCallers);
-        console.log("checkedCallers", checkedCallers);
-    }
-    const handleResponseMessageChange = (newResponseMessage) => {
-        setResponseMessages(newResponseMessage);
-    }
+	const handleCallerToolsInfoChange = (type) => setCallerToolsInfo(type);
+	const handleRunningInfoChange = (runningInfo) =>
+		setRunningInfo(runningInfo);
+	const handleSampleFileChange = (sampleFile) => setSampleFile(sampleFile);
+	const handleReferenceFileChange = (referenceFile) =>
+		setReferenceFile(referenceFile);
 
-  
-    return (
-        <CallingContext.Provider value={{
-            running,
-            readOption,
-            checkedCallers,
-            responseMessages,
-            svType,
+	return (
+		<CallingContext.Provider
+			value={{
+				sampleFile,
+				referenceFile,
+				callerToolsInfo,
+				runningInfo,
 
-            setReadOption: handleReadOptionChange,
-            setSvType: handleSvTypeChange,
-            setRunning: handleRunningChange,
-            setCheckedCallers: handleCheckedCallersChange,
-            setResponseMessages: handleResponseMessageChange,
-        }}>
-            {props.children}
-        </CallingContext.Provider >
-    )
-  }
+				setSampleFile: handleSampleFileChange,
+				setReferenceFile: handleReferenceFileChange,
+				setCallerToolsInfo: handleCallerToolsInfoChange,
+				setRunningInfo: handleRunningInfoChange,
+			}}
+		>
+			{props.children}
+		</CallingContext.Provider>
+	);
+};
 
 export default CallingContextProvider;
