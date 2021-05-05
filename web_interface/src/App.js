@@ -1,6 +1,8 @@
 import React from 'react';
-import DefaultLayout from "./layouts/DefaultLayout"
+import DefaultLayout from './layouts/DefaultLayout';
 
-const App = (props) => { return <DefaultLayout/>; }
+const App = (props) => {
+	return <DefaultLayout />;
+};
 
 export default App;
