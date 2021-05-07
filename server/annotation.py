@@ -77,5 +77,3 @@ def annotate_variants_by_id(vcf_file_name, ids):
 
     print(all_annotation_results)
     return all_annotation_results
-
-#annotate_variants_by_id("/home/sevcan/Desktop/test.vcf", [0])

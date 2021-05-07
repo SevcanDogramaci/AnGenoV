@@ -14,6 +14,26 @@ import merge
 app = Flask(__name__)
 CORS(app)
 
+# @app.route("/trial")
+# def trial():
+#     from time import sleep
+#     sleep(2)
+#     return {
+#                 "fileName": ["deneme.txt"],
+#                 "message": ["sucessfull !"]
+#         }
+
+@app.route('/get_variants_by_page')
+def get_variants_by_page():
+    from collections import OrderedDict
+    import json
+
+    vcf_file_name = request.args.get('file')
+    page_no = int(request.args.get('page_no'))
+    variants = variant_reader.get_variants_by_page(vcf_file_name, page_no)
+
+    return json.dumps(OrderedDict(variants))
+
 @app.route('/upload_file', methods = ['POST'])
 def upload_file():
 
@@ -65,7 +85,10 @@ def runSelectedTools():
 
 @app.route('/merge')
 def runSurvivor():
-    file_name = request.args.get('file')
+    import json
+
+    file_name = request.args.getlist('file')
+    print("File_names >>", file_name, type(file_name))
 
     messages, files = merge.runSurvivor(file_name)
     response = MessageResponse(MessageType.SUCCESS, 
