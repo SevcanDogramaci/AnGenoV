@@ -1,11 +1,12 @@
+import { Spinner } from '@blueprintjs/core';
 import igv from 'igv'
 import React, { Component } from 'react';
 
 var igvStyle = {
-    paddingTop: '10px',
-    paddingBottom: '10px',
+    paddingTop: '1%',
+    paddingBottom: '10%',
     margin: '8px',
-    border: '1px solid lightgray'
+    //border: '1px solid lightgray'
 }
 
 export default class IgvVisualizer extends Component {
@@ -20,8 +21,8 @@ export default class IgvVisualizer extends Component {
     }
   
     render() {
-      return (
-        <div id="igv-div" style={igvStyle}></div>
+      return(
+       <div id="igv-div" style={igvStyle}></div>
       );
     }
 }
