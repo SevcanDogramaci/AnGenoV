@@ -7,14 +7,11 @@ import { CallingToolReducer } from './CallingReducer';
 export const CallingContext = React.createContext(['light', () => {}]);
 
 const CallingContextProvider = (props) => {
-	const [callerToolsInfo, setCallerToolsInfo] = useReducer(
-		CallingToolReducer,
-		{
-			svType: 'SV Calling',
-			readOption: 'Illumina',
-			checkedCallers: Set(),
-		}
-	);
+	const [callerToolsInfo, setCallerToolsInfo] = useReducer(CallingToolReducer, {
+		svType: 'SV Calling',
+		readOption: 'Illumina',
+		checkedCallers: Set(),
+	});
 
 	const [runningInfo, setRunningInfo] = useState({
 		running: false,
@@ -25,11 +22,9 @@ const CallingContextProvider = (props) => {
 	const [referenceFile, setReferenceFile] = useState(undefined);
 
 	const handleCallerToolsInfoChange = (type) => setCallerToolsInfo(type);
-	const handleRunningInfoChange = (runningInfo) =>
-		setRunningInfo(runningInfo);
+	const handleRunningInfoChange = (runningInfo) => setRunningInfo(runningInfo);
 	const handleSampleFileChange = (sampleFile) => setSampleFile(sampleFile);
-	const handleReferenceFileChange = (referenceFile) =>
-		setReferenceFile(referenceFile);
+	const handleReferenceFileChange = (referenceFile) => setReferenceFile(referenceFile);
 
 	return (
 		<CallingContext.Provider

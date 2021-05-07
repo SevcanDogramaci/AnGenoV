@@ -1,15 +1,17 @@
 import { Set } from 'immutable';
 
+// eslint-disable-next-line import/prefer-default-export
 export function MergeReducer(state, action) {
 	switch (action.type) {
 		case 'add':
 			console.log(action);
 
 			if (action.paths.length > 1) {
-				let list = action.paths.map((file) => file.path);
+				const list = action.paths.map((file) => file.path);
 				console.log('add here->', list, list.concat(...state));
 				return Set(list.concat(...state));
-			} else if (action.paths.length == 0) {
+			}
+			if (action.paths.length === 0) {
 				throw new Error();
 			} else {
 				console.log('add->', [...state, action.paths[0].path]);

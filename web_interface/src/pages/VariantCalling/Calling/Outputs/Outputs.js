@@ -9,17 +9,15 @@ import RunningText from './components/RunningText';
 import OutputFile from './components/OutputFile';
 import { saveToDir } from '../../util/FileManipulations';
 
-const isFinished = (context) =>
-	context.running === false && !context.responseMessages;
-const isRunning = (context) =>
-	context.running === false && context.responseMessages;
+const isFinished = (context) => context.running === false && !context.responseMessages;
+const isRunning = (context) => context.running === false && context.responseMessages;
 
 const Outputs = (props) => {
 	const context = useContext(CallingContext);
 	const [checkedOutputFiles, setCheckedOutputFiles] = useState(Set());
 
 	const saveFilesToSelectedDirectory = () => {
-		let fileNames = checkedOutputFiles.toArray();
+		const fileNames = checkedOutputFiles.toArray();
 		saveToDir(fileNames);
 	};
 
@@ -53,18 +51,10 @@ const Outputs = (props) => {
 							justifyContent: 'center',
 						}}
 					>
-						<Pre
-							style={{ display: 'flex', flexDirection: 'column' }}
-						>
-							{
-								<RunningText
-									stop={context.runningInfo.running === false}
-								/>
-							}
+						<Pre style={{ display: 'flex', flexDirection: 'column' }}>
+							<RunningText stop={context.runningInfo.running === false} />
 							{isRunning(context.runningInfo) &&
-								context.runningInfo.responseMessages.message.map(
-									(element, id) => <div>{element}</div>
-								)}
+								context.runningInfo.responseMessages.message.map((element, id) => <div>{element}</div>)}
 						</Pre>
 					</div>
 
@@ -75,24 +65,16 @@ const Outputs = (props) => {
 								{console.log(
 									'OutputFile >>>',
 									context.runningInfo.responseMessages,
-									context.runningInfo.responseMessages
-										.fileName
+									context.runningInfo.responseMessages.fileName
 								)}
-								{context.runningInfo.responseMessages.fileName.map(
-									(fileName, id) => (
-										<OutputFile
-											onOutputFileChecked={
-												handleOutputFileChanged
-											}
-											filePath={fileName}
-										/>
-									)
-								)}
+								{context.runningInfo.responseMessages.fileName.map((fileName, id) => (
+									<OutputFile onOutputFileChecked={handleOutputFileChanged} filePath={fileName} />
+								))}
 							</div>
 
 							<div style={{ width: '50%', marginTop: '1%' }}>
 								<Button
-									fill={true}
+									fill
 									onClick={(e) => {
 										console.log('Saving...');
 										saveFilesToSelectedDirectory();

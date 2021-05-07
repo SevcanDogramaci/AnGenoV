@@ -11,10 +11,7 @@ const SVCallerTool = (props) => {
 	const [outName, setOutName] = useState(tool.outputName);
 
 	const updateToolConfig = (parameters, outputName) => {
-		if (
-			(parameters != tool.lastUsedParams) |
-			(outputName != tool.outputName)
-		) {
+		if ((parameters != tool.lastUsedParams) | (outputName != tool.outputName)) {
 			const config = {
 				toolName: tool.name,
 				params: parameters,
@@ -34,9 +31,7 @@ const SVCallerTool = (props) => {
 	const deleteTool = () => {
 		const config = { toolName: tool.name };
 
-		ipcRenderer
-			.invoke('delete-config-file', config)
-			.then((result) => onRefresh());
+		ipcRenderer.invoke('delete-config-file', config).then((result) => onRefresh());
 	};
 
 	const resetParamsToDefault = (event) => {
@@ -50,14 +45,10 @@ const SVCallerTool = (props) => {
 		setParams(tool.lastUsedParams);
 	};
 	const updateOutputName = (event) => {
-		event.target.value !== ''
-			? setOutName(event.target.value)
-			: setOutName(tool.outputName);
+		event.target.value !== '' ? setOutName(event.target.value) : setOutName(tool.outputName);
 	};
 	const updateParams = (event) => {
-		event.target.value !== ''
-			? setParams(event.target.value)
-			: setParams(tool.lastUsedParams);
+		event.target.value !== '' ? setParams(event.target.value) : setParams(tool.lastUsedParams);
 	};
 
 	return (
@@ -71,19 +62,8 @@ const SVCallerTool = (props) => {
 		>
 			{deletable && tool.name}
 
-			<Popover
-				position={'right-top'}
-				isOpen={tooglePopover}
-				usePortal={true}
-				canEscapeKeyClose={true}
-			>
-				<Button
-					minimal={true}
-					small={true}
-					icon="settings"
-					style={{ marginLeft: 5 }}
-					onClick={closeWithoutSave}
-				/>
+			<Popover position="right-top" isOpen={tooglePopover} usePortal canEscapeKeyClose>
+				<Button minimal small icon="settings" style={{ marginLeft: 5 }} onClick={closeWithoutSave} />
 
 				<div
 					style={{
@@ -101,15 +81,8 @@ const SVCallerTool = (props) => {
 							justifyContent: 'space-between',
 						}}
 					>
-						<p style={{ fontWeight: 'bold', margin: 0 }}>
-							{tool.name} Parameters
-						</p>
-						<Button
-							minimal={true}
-							small={true}
-							icon="small-cross"
-							onClick={(e) => setTogglePopover(false)}
-						/>
+						<p style={{ fontWeight: 'bold', margin: 0 }}>{tool.name} Parameters</p>
+						<Button minimal small icon="small-cross" onClick={(e) => setTogglePopover(false)} />
 					</div>
 
 					<div
@@ -120,12 +93,8 @@ const SVCallerTool = (props) => {
 							justifyContent: 'center',
 						}}
 					>
-						<p style={{ margin: 0 }}>
-							Parameters and their usage can be found{' '}
-						</p>
-						<p style={{ margin: 0 }}>
-							on the related tool's documentation page{' '}
-						</p>
+						<p style={{ margin: 0 }}>Parameters and their usage can be found </p>
+						<p style={{ margin: 0 }}>on the related tool's documentation page </p>
 						<p
 							style={{
 								margin: 5,
@@ -136,17 +105,17 @@ const SVCallerTool = (props) => {
 							Output Name:
 							<input
 								className="bp3-input"
-								fill={true}
-								small={true}
+								fill
+								small
 								defaultValue={tool.outputName}
 								onChange={(e) => updateOutputName(e)}
 							/>
 						</p>
 						<TextArea
-							id={'deneme'}
-							fill={true}
-							small={true}
-							growVertically={true}
+							id="deneme"
+							fill
+							small
+							growVertically
 							defaultValue={tool.lastUsedParams}
 							onChange={(e) => updateParams(e)}
 						/>
@@ -161,8 +130,8 @@ const SVCallerTool = (props) => {
 					>
 						<div>
 							<Button
-								minimal={true}
-								small={true}
+								minimal
+								small
 								intent={Intent.SUCCESS}
 								icon="saved"
 								style={{ margin: 5 }}
@@ -171,8 +140,8 @@ const SVCallerTool = (props) => {
 								Save
 							</Button>
 							<Button
-								minimal={true}
-								small={true}
+								minimal
+								small
 								intent={Intent.DANGER}
 								icon="refresh"
 								style={{ margin: 5 }}
@@ -182,8 +151,8 @@ const SVCallerTool = (props) => {
 							</Button>
 							{deletable && (
 								<Button
-									minimal={true}
-									small={true}
+									minimal
+									small
 									intent={Intent.DANGER}
 									icon="trash"
 									style={{ margin: 5 }}

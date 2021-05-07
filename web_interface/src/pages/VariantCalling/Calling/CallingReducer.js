@@ -1,5 +1,6 @@
 import { Set } from 'immutable';
 
+// eslint-disable-next-line import/prefer-default-export
 export function CallingToolReducer(state, action) {
 	console.log(state, action);
 	switch (action.type) {
@@ -24,9 +25,7 @@ export function CallingToolReducer(state, action) {
 			);
 			return {
 				...state,
-				checkedCallers: state.checkedCallers.filter(
-					(name) => name !== action.name
-				),
+				checkedCallers: state.checkedCallers.filter((name) => name !== action.name),
 			};
 		case 'update-read':
 			return {

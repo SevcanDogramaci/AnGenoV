@@ -36,15 +36,14 @@ const Calling = (props) => {
 		readConfig().then((result) => {
 			console.log(result);
 
-			let tools = result['tools'];
-			let filteredTools = {};
+			const { tools } = result;
+			const filteredTools = {};
 
 			Object.keys(tools)
 				.filter(
 					(tool) =>
-						tools[tool].readType ==
-							context.callerToolsInfo.readOption &&
-						tools[tool].svType == context.callerToolsInfo.svType
+						tools[tool].readType === context.callerToolsInfo.readOption &&
+						tools[tool].svType === context.callerToolsInfo.svType
 				)
 				.forEach((tool) => (filteredTools[tool] = tools[tool]));
 
@@ -78,10 +77,7 @@ const Calling = (props) => {
 					justifyContent: 'center',
 				}}
 			>
-				<SVCallerToolsList
-					tools={SVCallerTools}
-					onRefresh={refreshPage}
-				/>
+				<SVCallerToolsList tools={SVCallerTools} onRefresh={refreshPage} />
 			</div>
 
 			<div
@@ -97,8 +93,13 @@ const Calling = (props) => {
 
 			<div style={{ width: '30%', marginTop: '10%' }}>
 				<Button
-					disabled={context.running}
-					fill={true}
+					disabled={
+						!context.referenceFile ||
+						!context.sampleFile ||
+						!context.callerToolsInfo.checkedCallers.size ||
+						context.running
+					}
+					fill
 					icon="caret-right"
 					onClick={updateRunning}
 				>

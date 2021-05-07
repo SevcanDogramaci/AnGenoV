@@ -23,11 +23,7 @@ const Inputs = (props) => {
 			<p style={{ marginTop: '2%' }}>Load your Input Files</p>
 
 			<div style={{ width: '75%' }}>
-				<CustomFileInput
-					placeholder="sample"
-					file={context.sampleFile}
-					onFileChosen={context.setSampleFile}
-				/>
+				<CustomFileInput placeholder="sample" file={context.sampleFile} onFileChosen={context.setSampleFile} />
 				<CustomFileInput
 					placeholder="reference"
 					file={context.referenceFile}
@@ -39,10 +35,7 @@ const Inputs = (props) => {
 			<ReadOptionMenu />
 
 			<div style={{ marginTop: '10%' }}>
-				<SVTypeRadioGroup
-					value={context.callerToolsInfo.svType}
-					onRadioChosen={context.setCallerToolsInfo}
-				/>
+				<SVTypeRadioGroup value={context.callerToolsInfo.svType} onRadioChosen={context.setCallerToolsInfo} />
 			</div>
 		</div>
 	);

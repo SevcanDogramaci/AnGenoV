@@ -9,7 +9,7 @@ const SVCallerToolsList = (props) => {
 	const context = useContext(CallingContext);
 
 	const handleSVCallerChecked = (e, name) => {
-		let is_checked = e.target.checked;
+		const is_checked = e.target.checked;
 
 		if (is_checked) context.setCallerToolsInfo({ type: 'add', name });
 		else context.setCallerToolsInfo({ type: 'delete', name });
@@ -27,25 +27,19 @@ const SVCallerToolsList = (props) => {
 		>
 			<div>
 				{tools &&
-					Object.keys(tools).map((key, id) => {
-						return (
-							<Checkbox
-								onChange={(e) => handleSVCallerChecked(e, key)}
-								key={key}
-								style={{
-									display: 'flex',
-									flexDirection: 'row',
-									alignItems: 'center',
-								}}
-							>
-								<SVCallerTool
-									tool={tools[key]}
-									onRefresh={onRefresh}
-									deletable
-								/>
-							</Checkbox>
-						);
-					})}
+					Object.keys(tools).map((key, id) => (
+						<Checkbox
+							onChange={(e) => handleSVCallerChecked(e, key)}
+							key={key}
+							style={{
+								display: 'flex',
+								flexDirection: 'row',
+								alignItems: 'center',
+							}}
+						>
+							<SVCallerTool tool={tools[key]} onRefresh={onRefresh} deletable />
+						</Checkbox>
+					))}
 			</div>
 		</div>
 	);

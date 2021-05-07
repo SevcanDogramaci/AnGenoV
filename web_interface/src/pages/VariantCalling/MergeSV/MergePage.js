@@ -25,7 +25,7 @@ const MergePage = (props) => {
 		refreshPage();
 	}, []);
 
-	const removeList = (path) => setFileList({ type: 'remove', path: path });
+	const removeList = (path) => setFileList({ type: 'remove', path });
 
 	const handleFileChange = (event) => {
 		setFileList({ type: 'add', paths: Array.from(event.target.files) });
@@ -44,7 +44,7 @@ const MergePage = (props) => {
 
 	const refreshPage = () => {
 		readConfig().then((result) => {
-			let r = result['tools'];
+			const r = result.tools;
 			setTool(r[mergeToolName]);
 		});
 	};
@@ -73,16 +73,11 @@ const MergePage = (props) => {
 				<FileInput
 					id="fileInput"
 					buttonText="Browse"
-					style={{ margin: '2%' }}
+					style={{ margin: '2%', width: '600px', marginRight: '1%' }}
 					onInputChange={handleFileChange}
 					inputProps={{ multiple: true }}
-					style={{ width: '600px', marginRight: '1%' }}
 				/>
-				<Tooltip
-					content="At least 2 VCF files"
-					position={Position.RIGHT}
-					intent="warning"
-				>
+				<Tooltip content="At least 2 VCF files" position={Position.RIGHT} intent="warning">
 					<Icon icon="info-sign" intent="warning" />
 				</Tooltip>
 
@@ -93,7 +88,7 @@ const MergePage = (props) => {
 
 			<Button
 				text="Merge"
-				disabled={runningInfo.isRunning}
+				disabled={!files.size || runningInfo.isRunning}
 				onClick={runMergeTool}
 				style={{ marginTop: '2%' }}
 			/>

@@ -4,7 +4,7 @@ import { Checkbox, Button, ControlGroup, Spinner } from '@blueprintjs/core';
 const { ipcRenderer } = require('electron');
 
 const extractFileName = (filePath) => {
-	let splittedFileName = filePath.split('/');
+	const splittedFileName = filePath.split('/');
 	return splittedFileName[splittedFileName.length - 1];
 };
 
@@ -34,11 +34,7 @@ const OutputFile = (props) => {
 		>
 			<p>{extractFileName(filePath)}</p>
 			<ControlGroup style={{ display: 'flex', alignItems: 'center' }}>
-				<Checkbox
-					onChange={(e) =>
-						props.onOutputFileChecked(filePath, e.target.checked)
-					}
-				></Checkbox>
+				<Checkbox onChange={(e) => props.onOutputFileChecked(filePath, e.target.checked)} />
 				<Button onClick={viewFile}>View</Button>
 			</ControlGroup>
 		</div>

@@ -29,12 +29,7 @@ const MergeFilesList = (props) => {
 								}}
 							>
 								{file}
-								<Button
-									minimal
-									intent="danger"
-									icon="trash"
-									onClick={() => onRemoveFile(file)}
-								/>
+								<Button minimal intent="danger" icon="trash" onClick={() => onRemoveFile(file)} />
 							</div>
 						</li>
 					))}

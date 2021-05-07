@@ -9,10 +9,7 @@ const CustomFileInput = (props) => {
 			style={{ marginTop: '4%', width: '100%' }}
 			buttonText="Browse"
 			text={file !== undefined ? file.name : `Choose ${placeholder} file`}
-			onInputChange={(event) =>
-				event.target.files.length > 0 &&
-				onFileChosen(event.target.files[0])
-			}
+			onInputChange={(event) => event.target.files.length > 0 && onFileChosen(event.target.files[0])}
 		/>
 	);
 };

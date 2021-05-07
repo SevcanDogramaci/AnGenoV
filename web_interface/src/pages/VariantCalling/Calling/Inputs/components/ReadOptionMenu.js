@@ -1,11 +1,5 @@
 import React, { useContext } from 'react';
-import {
-	Button,
-	Menu,
-	MenuItem,
-	Popover,
-	PopoverPosition,
-} from '@blueprintjs/core';
+import { Button, Menu, MenuItem, Popover, PopoverPosition } from '@blueprintjs/core';
 
 import { CallingContext } from '../../CallingContext';
 
@@ -29,21 +23,13 @@ const ReadOptionMenu = (props) => {
 			content={
 				<Menu>
 					{menuItems.map((menuItem) => (
-						<MenuItem
-							onClick={(e) =>
-								handleMenuItemChange(e.target.innerText)
-							}
-							text={menuItem}
-						/>
+						<MenuItem onClick={(e) => handleMenuItemChange(e.target.innerText)} text={menuItem} />
 					))}
 				</Menu>
 			}
 			position={PopoverPosition.RIGHT_TOP}
 		>
-			<Button
-				rightIcon="caret-down"
-				text={context.callerToolsInfo.readOption}
-			/>
+			<Button rightIcon="caret-down" text={context.callerToolsInfo.readOption} />
 		</Popover>
 	);
 };

@@ -26,19 +26,13 @@ const VariantCallingPage = () => {
 				justifyContent: 'center',
 			}}
 		>
-			<Stepper
-				steps={stepNames}
-				onStepClick={handleStepClick}
-				activeStep={stepNames[currentStepIndex]}
-			/>
+			<Stepper steps={stepNames} onStepClick={handleStepClick} activeStep={stepNames[currentStepIndex]} />
 			{currentStepIndex === stepNames.indexOf('Calling') && (
 				<CallingContextProvider>
 					<CallingPage />
 				</CallingContextProvider>
 			)}
-			{currentStepIndex === stepNames.indexOf('Merge SV') && (
-				<MergePage />
-			)}
+			{currentStepIndex === stepNames.indexOf('Merge SV') && <MergePage />}
 		</div>
 	);
 };
