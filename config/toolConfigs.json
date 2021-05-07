@@ -6,7 +6,7 @@
       "svType": "SV Calling",
       "outputName": "outputTardis",
       "defaultParams": "tardis -i ${alignedFile} --ref ${referenceFile} --sonic human_g1k_v37.sonic --out ${outputName}",
-      "lastUsedParams": "tardis -i ${alignedFile} --ref ${referenceFile} --sonic human_g1k_v37.sonic --out ${outputName} --no-mei"
+      "lastUsedParams": "tardis -i ${alignedFile} --ref ${referenceFile} --sonic human_g1k_v37.sonic --out ${outputName}"
     },
     "Delly": {
       "name": "Delly",
@@ -62,21 +62,21 @@
       "svType": "SNP / INDEL",
       "outputName": "outputStrelka",
       "defaultParams": "configureStrelkaGermlineWorkflow.py --bam ${alignedFile} -referenceFasta ${referenceFile} --runDir ${outputName} -m local -j 20",
-      "lastUsedParams": "configureStrelkaGermlineWorkflow.py --bam ${alignedFile} -referenceFasta ${referenceFile} --runDir ${outputName} -m local -j 20"
+      "lastUsedParams": "configureStrelkaGermlineWorkflow.py --bam ${alignedFile} --referenceFasta ${referenceFile} --runDir ${outputName},\n${outputName}/runWorkflow.py -m local -j 20"
     },
     "GATK": {
       "name": "GATK",
       "readType": "Illumina",
       "svType": "SNP / INDEL",
-      "outputName": "",
-      "defaultParams": "",
-      "lastUsedParams": ""
+      "outputName": "outputGATK",
+      "defaultParams": "gatk HaplotypeCaller -R ${referenceFile} -I ${alignedFile} -O ${outputName}",
+      "lastUsedParams": "gatk HaplotypeCaller -R ${referenceFile} -I ${alignedFile} -O ${outputName}"
     },
-    "Survivor": {
-      "name": "Survivor",
-      "outputName": "mergeDeneme",
+    "SURVIVOR": {
+      "name": "SURVIVOR",
+      "outputName": "outputSURVIVOR",
       "defaultParams": "SURVIVOR merge temp/merge/mergefile 1000 2 1 1 0 30 temp/merge/merged.vcf",
-      "lastUsedParams": "SURVIVOR merge temp/merge/mergefile 2000 2 1 1 0 30 ${outputName}"
+      "lastUsedParams": "SURVIVOR merge temp/merge/mergefile 1000 2 1 1 0 30 temp/merge/merged.vcf"
     }
   }
 }
