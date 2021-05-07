@@ -1,72 +1,83 @@
 import axios from 'axios';
 
 export default class Service {
+	static async getVariants(fileName) {
+		const customAxiosInstance = axios.create({
+			baseURL: 'http://127.0.0.1:5000/',
+		});
 
-    static async getVariants(fileName) {
+		const response = await customAxiosInstance.get(`/get_variants?file=${fileName}`);
 
-        const customAxiosInstance = axios.create({
-            baseURL: "http://127.0.0.1:5000/",
-          });
+		console.log('Variants >>', response.data.variants);
+		return response.data.variants;
+	}
 
-        const response = await customAxiosInstance.get(`/get_variants?file=${fileName}`);
+	static async getVariantsByPage(fileName, pageNo) {
+		const customAxiosInstance = axios.create({
+			baseURL: 'http://127.0.0.1:5000/',
+		});
 
-        console.log("Variants >>", response.data.variants);
-        return response.data.variants;
-    }
+		const response = await customAxiosInstance.get(`/get_variants_by_page?file=${fileName}&page_no=${pageNo}`);
 
-    static async annotateSelectedVariants(fileName, selectedVariantIds) {
+		console.log('Variants >>', response.data);
+		return response.data;
+	}
 
-        const customAxiosInstance = axios.create({
-            baseURL: "http://127.0.0.1:5000/",
-          });
+	static async annotateSelectedVariants(fileName, selectedVariantIds) {
+		const customAxiosInstance = axios.create({
+			baseURL: 'http://127.0.0.1:5000/',
+		});
 
-        selectedVariantIds = JSON.stringify(selectedVariantIds.toArray());
+		if (!Array.isArray(selectedVariantIds)) selectedVariantIds = JSON.stringify(selectedVariantIds.toArray());
+		else selectedVariantIds = JSON.stringify(selectedVariantIds);
 
-        const response = await customAxiosInstance.get(`/annotate?file=${fileName}&ids=${selectedVariantIds}`);
+		console.log("Selected Variants >>", selectedVariantIds)
 
-        console.log("Filtered Variants >>", response.data);
+		const response = await customAxiosInstance.get(`/annotate?file=${fileName}&ids=${selectedVariantIds}`);
 
-        return response.data.variants;
-    }
+		console.log('Filtered Variants >>', response.data);
 
-    static async runSurvivor(fileName) {
+		return response.data;
+	}
 
-        const customAxiosInstance = axios.create({
-            baseURL: "http://127.0.0.1:5000/",
-          });
+	static async runSurvivor(fileName) {
+		const customAxiosInstance = axios.create({
+			baseURL: 'http://127.0.0.1:5000/',
+		});
 
-        const response = await customAxiosInstance.get(`/merge?file=${fileName}`);
+		const response = await customAxiosInstance.get(`/merge?file=${fileName}`);
 
-        console.log("Survivor response >>", response.data);
-        return response.data;
-    }
+		console.log('Survivor response >>', response.data);
+		return response.data;
+	}
 
-    static async runSelectedTools(files, selectedTools) {
-        console.log(files, selectedTools.toArray());
+	static async runSelectedTools(files, selectedTools) {
+		console.log(files, selectedTools.toArray());
 
-        const customAxiosInstance = axios.create({
-            baseURL: "http://127.0.0.1:5000/",
-          });
+		const customAxiosInstance = axios.create({
+			baseURL: 'http://127.0.0.1:5000/',
+		});
 
-        selectedTools = JSON.stringify(selectedTools.toArray());
+		selectedTools = JSON.stringify(selectedTools.toArray());
 
-        const response = await customAxiosInstance.get(`/sv_calling/RST?ref_file=${files.ref}&sample_file=${files.sample}&selected_tools=${selectedTools}`);
+		const response = await customAxiosInstance.get(`/sv_calling/RST?ref_file=${files.ref}&sample_file=${files.sample}&selected_tools=${selectedTools}`);
 
-        console.log("ST response >>", response.data);
-        return response.data;
-  }
+		// const response = await customAxiosInstance.get('/trial');
 
-    /* This function is used to view files by uploading when AnGenoV works on web browser. */
-    static async uploadFile(file) {
+		console.log('ST response >>', response.data);
+		return response.data;
+	}
 
-        const config = {
-            headers: {
-                'content-type': 'multipart/form-data'
-            }
-        }
+	/* This function is used to view files by uploading when AnGenoV works on web browser. */
+	static async uploadFile(file) {
+		const config = {
+			headers: {
+				'content-type': 'multipart/form-data',
+			},
+		};
 
-        const response = await axios.post("/upload_file", file, config);
-        console.log("Response is ", response);
-        return response.data;
-    }
+		const response = await axios.post('/upload_file', file, config);
+		console.log('Response is ', response);
+		return response.data;
+	}
 }
