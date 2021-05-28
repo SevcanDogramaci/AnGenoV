@@ -6,6 +6,7 @@ import { AnnotationReducer, VariantsReducer } from './AnnotationReducer';
 export const AnnotationContext = React.createContext(['light', () => {}]);
 
 const AnnotationContextProvider = (props) => {
+	console.log('Annotation Context');
 	const { children } = props;
 
 	const [VCFfile, setVCFfile] = useState(null);
@@ -14,6 +15,10 @@ const AnnotationContextProvider = (props) => {
 		variants: [],
 		totalPageNumber: 0,
 		currentPageNo: 0,
+		filter: '(Ex: chrom==1 and pos>10100)',
+		filteredVariants: [],
+		filteredVariantsTotalPageNumber: 0,
+		filteredVariantsCurrentPageNo: 0,
 	});
 
 	const [selectedVariantsInfo, setSelectedVariantsInfo] = useReducer(AnnotationReducer, {
@@ -25,12 +30,6 @@ const AnnotationContextProvider = (props) => {
 		enabled: false,
 		loading: false,
 	});
-
-	// const [filteredVariants, setFilteredVariants] = useState(undefined);
-
-	// const handleFilteredVariantsChange = (variants) => {
-	// 	setFilteredVariants(variants);
-	// };
 
 	const handleMultipleSelectionInfoChange = (newMultipleSelectionInfo) => {
 		setIsMultipleSelectionEnabled(newMultipleSelectionInfo);
@@ -54,13 +53,11 @@ const AnnotationContextProvider = (props) => {
 				selectedVariantsInfo,
 				VCFfile,
 				multipleSelectionInfo,
-				// filteredVariants,
 
 				setVCFfile: handleFileChange,
 				setVariantsInfo: handleVariantsInfoChange,
 				setSelectedVariantsInfo: handleSelectedVariantsInfoChange,
 				setIsMultipleSelectionEnabled: handleMultipleSelectionInfoChange,
-				// setFilteredVariants: handleFilteredVariantsChange,
 			}}
 		>
 			{children}

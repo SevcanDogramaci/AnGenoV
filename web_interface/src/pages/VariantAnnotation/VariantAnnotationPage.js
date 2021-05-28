@@ -7,8 +7,6 @@ import VariantInfoOverlay from './components/VariantInfoOverlay';
 import CustomSpinner from './components/CustomSpinner';
 import { AnnotationContext } from './AnnotationContext';
 
-const extractHeaders = (data) => Object.keys(data[0]);
-
 const VariantAnnotationPage = () => {
 	const context = useContext(AnnotationContext);
 
@@ -21,18 +19,19 @@ const VariantAnnotationPage = () => {
 		annotations: null,
 	});
 
-	const handleShowVariants = () => {
+	const handleShowVariants = (event) => {
+		console.log('handleShowVariants');
 		context.setVariantsInfo({ type: 'start-running' });
-		Service.getVariantsByPage(context.VCFfile.path, context.variantsInfo.currentPageNo).then((result) => {
+		Service.getVariantsByPage(context.VCFfile.path, context.variantsInfo.currentPageNo).then((result) =>
 			context.setVariantsInfo({
 				type: 'finish-running',
 				variants: result.variants,
 				currentPageNo: result.current_page_no,
 				totalPageNumber: result.total_page_number,
-			});
-		});
+			})
+		);
 	};
-	
+
 	const handleOverlayChange = (open, variantID) => {
 		if (variantID !== undefined) {
 			setOverlayVariantInfo({
@@ -65,14 +64,27 @@ const VariantAnnotationPage = () => {
 	const renderTable = () => {
 		if (context.variantsInfo.running) return <Spinner />;
 
-		if (Object.keys(context.variantsInfo.variants).length > 0)
+		if (
+			Object.keys(
+				context.variantsInfo.filteredVariants
+					? context.variantsInfo.filteredVariants
+					: context.variantsInfo.variants
+			).length > 0
+		)
 			return (
 				<>
-					<VariantInfoOverlay variantInfo={overlayVariantInfo} onClose={() => handleOverlayChange(false)} />
+					<VariantInfoOverlay
+						variantInfo={overlayVariantInfo}
+						onClose={(event) => handleOverlayChange(false)}
+					/>
 
 					<VariantsTable
-						variants={context.variantsInfo.variants}
-						headers={extractHeaders(context.variantsInfo.variants)}
+						variants={
+							context.variantsInfo.filteredVariants
+								? context.variantsInfo.filteredVariants
+								: context.variantsInfo.variants
+						}
+
 						onOverlayOpen={handleOverlayChange}
 						onAnnotateMultiple={handleAnnotateMultiple}
 						isAnnotationRunning={multipleAnnotationsInfo.running}
@@ -112,7 +124,7 @@ const VariantAnnotationPage = () => {
 				<Button
 					style={{ paddingLeft: '10%', paddingRight: '10%' }}
 					disabled={!context.VCFfile || context.variantsInfo.running}
-					onClick={handleShowVariants}
+					onClick={(event) => handleShowVariants(event)}
 				>
 					Show
 				</Button>
@@ -124,7 +136,7 @@ const VariantAnnotationPage = () => {
 
 			<div
 				style={{
-					//height: '400px',
+					// height: '400px',
 					display: 'flex',
 					flexDirection: 'column',
 					alignItems: 'center',

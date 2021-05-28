@@ -38,6 +38,7 @@ export function AnnotationReducer(state, action) {
 }
 
 export function VariantsReducer(state, action) {
+	console.log('VariantsReducer');
 	console.log(action);
 
 	switch (action.type) {
@@ -49,26 +50,60 @@ export function VariantsReducer(state, action) {
 
 		case 'finish-running':
 			return {
+				...state,
 				running: false,
 				variants: action.variants,
 				totalPageNumber: action.totalPageNumber,
 				currentPageNo: action.currentPageNo,
+				filteredVariants: null,
+				filter: '(Ex: chrom==1 and pos>10100)',
+			};
+
+		case 'finish-running-filtered':
+			return {
+				...state,
+				running: false,
+				filter: action.filter,
+				filteredVariants: action.variants,
+				filteredVariantsTotalPageNumber: action.totalPageNumber,
+				filteredVariantsCurrentPageNo: action.currentPageNo,
 			};
 
 		case 'prev-page':
 			return {
+				...state,
 				running: false,
 				variants: action.variants,
 				totalPageNumber: action.totalPageNumber,
 				currentPageNo: state.currentPageNo - 1,
 			};
 
+		case 'prev-page-filtered':
+			console.log("prev-page-filtered'");
+			return {
+				...state,
+				running: false,
+				filteredVariants: action.variants,
+				filteredVariantsTotalPageNumber: action.totalPageNumber,
+				filteredVariantsCurrentPageNo: state.filteredVariantsCurrentPageNo - 1,
+			};
+
 		case 'next-page':
 			return {
+				...state,
 				running: false,
 				variants: action.variants,
 				totalPageNumber: action.totalPageNumber,
 				currentPageNo: state.currentPageNo + 1,
+			};
+
+		case 'next-page-filtered':
+			return {
+				...state,
+				running: false,
+				filteredVariants: action.variants,
+				filteredVariantsTotalPageNumber: action.totalPageNumber,
+				filteredVariantsCurrentPageNo: state.filteredVariantsCurrentPageNo + 1,
 			};
 
 		default:

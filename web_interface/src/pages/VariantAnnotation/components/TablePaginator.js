@@ -21,25 +21,51 @@ const TextStyle = {
 const TablePaginator = (props) => {
 	const context = useContext(AnnotationContext);
 
+	const getPageInfo = () =>
+		context.variantsInfo.filteredVariants
+			? {
+					filtered: 'filtered',
+					total: context.variantsInfo.filteredVariantsTotalPageNumber,
+					current: context.variantsInfo.filteredVariantsCurrentPageNo,
+			  }
+			: {
+					filtered: '',
+					total: context.variantsInfo.totalPageNumber,
+					current: context.variantsInfo.currentPageNo,
+			  };
+
 	const onPageChange = (type) => {
 		context.setVariantsInfo({ type: 'start-running' });
-		const currentPageNo =
-			type === 'prev-page' ? context.variantsInfo.currentPageNo - 1 : context.variantsInfo.currentPageNo + 1;
-		Service.getVariantsByPage(context.VCFfile.path, currentPageNo).then((result) => {
-			context.setVariantsInfo({
-				type,
-				variants: result.variants,
-				totalPageNumber: result.total_page_number,
-				currentPageNo: context.variantsInfo.current_page_no,
+
+		const { filtered, total, current } = getPageInfo();
+		console.log(filtered, current, type, total);
+
+		const currentPageNo = type === 'prev-page' ? current - 1 : current + 1;
+
+		if (filtered) {
+			Service.filterVariants(context.VCFfile.path, context.variantsInfo.filter, currentPageNo).then((result) => {
+				context.setVariantsInfo({
+					type: `${type}-${filtered}`,
+					variants: result.variants,
+					totalPageNumber: result.total_page_number,
+				});
 			});
-		});
+		} else {
+			Service.getVariantsByPage(context.VCFfile.path, currentPageNo).then((result) => {
+				context.setVariantsInfo({
+					type: `${type}`,
+					variants: result.variants,
+					totalPageNumber: result.total_page_number,
+				});
+			});
+		}
 	};
 
 	return (
 		<div style={SpinnerStyle}>
 			<Button
 				style={ButtonStyle}
-				disabled={context.variantsInfo.currentPageNo === 0}
+				disabled={getPageInfo().current === 0}
 				small
 				minimal
 				outlined
@@ -47,10 +73,10 @@ const TablePaginator = (props) => {
 				onClick={() => onPageChange('prev-page')}
 			/>
 			<p style={TextStyle}>
-				{context.variantsInfo.currentPageNo + 1} / {context.variantsInfo.totalPageNumber}
+				{getPageInfo().current + 1} / {getPageInfo().total}
 			</p>
 			<Button
-				disabled={context.variantsInfo.currentPageNo + 1 === context.variantsInfo.totalPageNumber}
+				disabled={getPageInfo().current + 1 === getPageInfo().total}
 				style={ButtonStyle}
 				small
 				minimal
