@@ -10,12 +10,16 @@ def get_variants(vcf_file_name) :
     vcf_in = VariantFile(f"{vcf_file_name}")  
     vcf_out = {}
     variants = []
+    counter=1;
 
     for id, rec in enumerate(vcf_in.fetch()):
         variant_info = {}
         if rec.filter.get("PASS"):
             variant_info["chrom"] = rec.chrom
-            variant_info["id"] = rec.id
+            if rec.id != None:
+                variant_info["id"] = rec.id
+            else:
+                variant_info["id"] = "ANG" + str(counter)
             variant_info["pos"] = rec.pos
             variant_info["end"] = rec.stop
 
@@ -32,7 +36,7 @@ def get_variants(vcf_file_name) :
             variant_info["alts"] = rec.alts
 
             variants.append(variant_info)
-
+        counter += 1
     vcf_out["variants"] = variants[0:]
     
     return vcf_out
