@@ -21,7 +21,7 @@ const Calling = (props) => {
 		context.setRunningInfo({ ...context.setRunningNew, running: true });
 
 		Service.runSelectedTools(
-			{ sample: context.sampleFile, ref: context.referenceFile },
+			{ sample: context.sampleFile.path, ref: context.referenceFile.path },
 			context.callerToolsInfo.checkedCallers
 		).then((response) => {
 			console.log('Response >> ', response);
