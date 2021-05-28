@@ -45,7 +45,7 @@ const VariantInfoOverlay = ({ variantInfo, onClose }) => {
 						title="Annotations"
 						panel={variant ? <SampleAnnotationPanel /> : <Spinner />}
 					/>
-					<Tab id="visualization" title="Visualization" panel={<IgvVisualizer />} />
+					<Tab id="visualization" title="Visualization" panel={<IgvVisualizer variant={variant} />} />
 					<Tabs.Expander />
 				</Tabs>
 			</div>

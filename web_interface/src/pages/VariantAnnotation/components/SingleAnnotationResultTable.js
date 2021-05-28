@@ -8,10 +8,16 @@ const SingleAnnotationResultTable = ({ variant }) => {
 	const [annotations, setAnnotations] = useState(undefined);
 
 	useEffect(() => {
-		Service.annotateSelectedVariants(context.VCFfile.path, [variant.id]).then((result) =>
-			setAnnotations(JSON.parse(result[0].annotations[0]))
-		);
-	}, []);
+		let mounted = true;
+
+		Service.annotateSelectedVariants(context.VCFfile.path, [variant.id]).then((result) => {
+			if (mounted) setAnnotations(JSON.parse(result[0].annotations[0]));
+		});
+
+		return function cleanup() {
+			mounted = false;
+		};
+	}, [context.VCFfile.path, variant.id]);
 
 	if (!annotations) return <Spinner />;
 
