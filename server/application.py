@@ -51,6 +51,28 @@ def get_variants():
     variants = variant_reader.get_variants(vcf_file_name)
     return variants
 
+@app.route('/filter')
+def filter_variants_by_page():
+    from collections import OrderedDict
+    import json 
+
+    vcf_file_name = request.args.get('file')
+    filter_condition = request.args.get('filter')
+    page_no = int(request.args.get('page_no'))
+
+    variants = variant_reader.filter_variants_by_page(vcf_file_name, filter_condition, page_no)
+    return json.dumps(OrderedDict(variants))
+
+# @app.route('/filter')
+# def filter_variants():
+#     from collections import OrderedDict
+#     import json 
+
+#     vcf_file_name = request.args.get('file')
+#     filter_condition = request.args.get('filter')
+#     variants = variant_reader.filter_variants_by_eval(vcf_file_name, filter_condition)
+#     return jsonify(variants)
+
 @app.route('/annotate')
 def annotate_variants():
     import json
