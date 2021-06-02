@@ -76,7 +76,7 @@ def filter_variants_by_id(vcf_file_name, ids):
     return filtered_variants
 
 RESERVED_WORDS = [
-	{ "name": 'chrom', "pattern": 'chrom(<|>|<=|>=|==|!=)(".*"|[0-9]+)' }, # chrom must be a string
+	{ "name": 'chrom', "pattern": 'chrom(<|>|<=|>=|==|!=)(".*"|[0-9]+|chr[0-9]+)' }, # chrom must be a string
 	{ "name": 'pos', "pattern": 'pos(<|>|<=|>=|==|!=)([0-9]+)' },
 	{ "name": 'end', "pattern": 'end(<|>|<=|>=|==|!=)([0-9]+)' },
 	{ "name": 'id', "pattern": 'id(==|!=)(".*")' },
@@ -85,15 +85,16 @@ RESERVED_WORDS = [
 ]
 
 def replace_chrom_filter(reservedWord, filter_condition):
-    pattern = reservedWord["pattern"]
-
     import re
+
+    pattern = reservedWord["pattern"]
     res = re.findall(pattern, "".join(filter_condition.split(' ')))
     print("Res", res)
 
     try:
         res = res[0]
-        value = int(res[1].replace('"', ''))
+        value = res[1].replace('chr', '') # remove chr
+        value = int(value.replace('"', '')) # convert to number
         return filter_condition.replace(reservedWord["name"], f'int(variant["{reservedWord["name"]}"])')
     except:
         return filter_condition.replace(reservedWord["name"], f'variant["{reservedWord["name"]}"]')
@@ -146,3 +147,5 @@ def filter_variants_by_page(vcf_file_name, filter_condition, page_no):
 # filter_variants_by_page("/home/sevcan/Desktop/dbsnp/tutorials/Variation Services/test_vcf.vcf", "pos>10100", 0)
 # filter_variants_by_page("/home/sevcan/Desktop/dbsnp/tutorials/Variation Services/test_vcf.vcf", 'chrom <    2', 0)
 # filter_variants_by_page("/home/sevcan/Desktop/dbsnp/tutorials/Variation Services/test.vcf", 'chrom <    2', 0)
+# replace_chrom_filter(RESERVED_WORDS[0], 'chrom < "chr1"')
+# replace_chrom_filter(RESERVED_WORDS[0], 'chrom < chr1')
