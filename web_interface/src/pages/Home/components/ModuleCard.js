@@ -26,7 +26,7 @@ const LowerHr = (
 );
 
 const ModuleCard = (props) => {
-	const { name, explanation, buttonText } = props;
+	const { name, explanation, buttonText, link } = props;
 
 	return (
 		<div
@@ -42,7 +42,9 @@ const ModuleCard = (props) => {
 			{UpperHr}
 			<h3>{name}</h3>
 			<p>{explanation}</p>
-			<Button text={buttonText} />
+			<a target="_blank" href={link} rel="noreferrer">
+				<Button text={buttonText} />
+			</a>			
 			{LowerHr}
 		</div>
 	);
