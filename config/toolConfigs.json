@@ -13,8 +13,8 @@
       "readType": "Illumina",
       "svType": "SV Calling",
       "outputName": "outputDelly",
-      "defaultParams": "delly call -o ${outputName} -g ${referenceFile} ${alignedFile}",
-      "lastUsedParams": "delly call -o ${outputName} -g ${referenceFile} ${alignedFile}"
+      "defaultParams": "delly call -o ${outputName}.bcf -g ${referenceFile} ${alignedFile}",
+      "lastUsedParams": "delly call -o ${outputName}.bcf -g ${referenceFile} ${alignedFile}"
     },
     "Manta": {
       "name": "Manta",
