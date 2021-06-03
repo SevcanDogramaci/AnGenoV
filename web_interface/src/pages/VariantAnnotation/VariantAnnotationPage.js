@@ -120,6 +120,7 @@ const VariantAnnotationPage = () => {
 					style={{ marginRight: '4%' }}
 					text={context.VCFfile ? context.VCFfile.name : 'Choose file'}
 					onInputChange={(event) => context.setVCFfile(event)}
+					inputProps={{accept: ".vcf, .bcf"}}
 				/>
 				<Button
 					style={{ paddingLeft: '10%', paddingRight: '10%' }}

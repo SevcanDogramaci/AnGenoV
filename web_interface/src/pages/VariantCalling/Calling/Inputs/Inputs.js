@@ -5,6 +5,7 @@ import { CallingContext } from '../CallingContext';
 import CustomFileInput from './components/CustomFileInput';
 import ReadOptionMenu from './components/ReadOptionMenu';
 import SVTypeRadioGroup from './components/SVTypeRadioGroup';
+import {Tooltip, Position, Icon} from '@blueprintjs/core';
 
 const Inputs = (props) => {
 	const context = useContext(CallingContext);
@@ -22,13 +23,26 @@ const Inputs = (props) => {
 
 			<p style={{ marginTop: '2%' }}>Load your Input Files</p>
 
-			<div style={{ width: '75%' }}>
-				<CustomFileInput placeholder="sample" file={context.sampleFile} onFileChosen={context.setSampleFile} />
+			<div style={{ display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", verticalAlign:"middle", width: '75%' }}>
+				<div style={{ display:"flex", flexDirection:"row", justifyContent:"space-between", alignItems:"center"}}>
+				<CustomFileInput placeholder="sample" file={context.sampleFile} onFileChosen={context.setSampleFile} inputProps={{accept: ".bam, .cram"}} />
+				&nbsp;&nbsp;
+				<Tooltip content="'.bam' or '.cram' files" position={Position.RIGHT} intent="primary">
+					<Icon style={{verticalAlign:"middle"}} icon="help" intent="primary" />
+				</Tooltip></div>
+
+				<div style={{ display:"flex", flexDirection:"row", justifyContent:"space-between", alignItems:"center"}}>
 				<CustomFileInput
 					placeholder="reference"
 					file={context.referenceFile}
 					onFileChosen={context.setReferenceFile}
+					inputProps={{accept: ".fa, .fasta"}}
 				/>
+				&nbsp;&nbsp;
+				<Tooltip content="'.fa' or '.fasta' files" position={Position.RIGHT} intent="primary">
+					<Icon style={{verticalAlign:"middle"}} icon="help" intent="primary" />
+				</Tooltip></div>
+				
 			</div>
 
 			<p style={{ marginTop: '10%' }}>Select Your Method :</p>

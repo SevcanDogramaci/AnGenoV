@@ -2,7 +2,7 @@ import React from 'react';
 import { FileInput } from '@blueprintjs/core';
 
 const CustomFileInput = (props) => {
-	const { file, placeholder, onFileChosen } = props;
+	const { file, placeholder, onFileChosen, inputProps } = props;
 
 	return (
 		<FileInput
@@ -10,6 +10,7 @@ const CustomFileInput = (props) => {
 			buttonText="Browse"
 			text={file !== undefined ? file.name : `Choose ${placeholder} file`}
 			onInputChange={(event) => event.target.files.length > 0 && onFileChosen(event.target.files[0])}
+			inputProps={{accept: inputProps.accept}}
 		/>
 	);
 };
