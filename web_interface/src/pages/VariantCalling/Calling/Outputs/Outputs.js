@@ -73,6 +73,7 @@ const Outputs = (props) => {
 							</div>
 
 							<div style={{ width: '50%', marginTop: '1%' }}>
+								{context.runningInfo.responseMessages.fileName.length > 0 ? ( 
 								<Button
 									fill
 									onClick={(e) => {
@@ -82,6 +83,9 @@ const Outputs = (props) => {
 								>
 									Save
 								</Button>
+								) : (
+									console.log("")
+								)}
 							</div>
 						</>
 					)}

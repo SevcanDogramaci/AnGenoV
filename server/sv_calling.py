@@ -2,23 +2,36 @@ import subprocess
 import os
 import sys
 import shutil
+import psutil
 from pathlib import Path
+import time
+import io
 
-out="a"
+success=True
+def on_terminate(proc):
+    print("process {} terminated with exit code {}".format(proc, proc.returncode))
 
 def runSVCallerTool (referenceFile, alignedFile, toolName, allArgs):
-    global out
+    global success
 
     for arg in allArgs:
         popen=subprocess.Popen("x-terminal-emulator -e \"echo " + toolName + " is running...;echo;" + arg + "\"", shell=True, stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.PIPE)
-        popen.wait()
 
+        proc=psutil.Process(popen.pid)
+        returncode= proc.wait()
+        print(returncode)
+
+        if returncode != 0 :
+            success = False
+        else:
+            success = True
+        
     toolName = toolName.lower()
     return os.getcwd() + "/temp/ToolsOutputs/"  + toolName
 
 def runSelectedTools(reference_file, aligned_file, selectedTools):
     import json
-
+    global success
     print("Inputs >> ", reference_file, aligned_file, selectedTools)
     responseMessages = []
     files = []
@@ -49,8 +62,12 @@ def runSelectedTools(reference_file, aligned_file, selectedTools):
                     print("Error: %s : %s" % (dir_path, e.strerror))
                 
                 outputFileForResponse = runSVCallerTool(reference_file, aligned_file, tool["name"], allArgs)
-                responseMessages.append( tool["name"] + " is finished successfully\n")
-                files.append(outputFileForResponse)
+                if success is True:
+                    responseMessages.append( tool["name"] + " is finished successfully\n")
+                    files.append(outputFileForResponse)
+                else: 
+                    responseMessages.append( tool["name"] + " has an error\n")
+                
 
     return (responseMessages, files)
     
