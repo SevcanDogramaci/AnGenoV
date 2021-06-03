@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Checkbox, Button, Spinner, Intent, Divider } from '@blueprintjs/core';
+import { Checkbox, Button, Spinner, Intent, Divider, Tooltip, Icon, Position } from '@blueprintjs/core';
 import { Column, Table, SelectionModes, Cell } from '@blueprintjs/table';
 import TablePaginator from './TablePaginator';
 import { AnnotationContext } from '../AnnotationContext';
@@ -29,7 +29,8 @@ const VariantsTable = (props) => {
 
 
 	const renderDefaultTableCell = (rowIndex, key) => <Cell>{variants[rowIndex][key]}</Cell>;
-
+	var types="DEL, INV, INS, DUP,"
+	var notAlt="[<>]"
 	const renderCheckableColumnCell = (rowIndex) => {
 		const variantID = variants[rowIndex].id;
 
@@ -41,29 +42,73 @@ const VariantsTable = (props) => {
 					alignItems: 'center',
 				}}
 			>
-				<Checkbox
-					key={variantID}
-					checked={context.selectedVariantsInfo.selectedVariants.includes(variantID)}
-					onChange={(event) => {
-						const isChecked = event.target.checked;
+				{ variants[rowIndex].svtype != null ? (
+					types.includes(variants[rowIndex].svtype.substring(0,3)) ? (
+					// notAlt.includes(variants[rowIndex].alts[0]) || types.includes(variants[rowIndex].alts[variants[rowIndex].alts.length-1]) ? (
+					(variants[rowIndex].alts[0].split("").some(ch => notAlt.indexOf(ch) !== -1) && !variants[rowIndex].svtype.includes("DEL")) ? (
+						<Tooltip content="Alt info is insufficient." intent="warning">
+							<Icon icon="warning-sign" intent="warning" />
+						</Tooltip> 
+					
+						) : (
+							
+							<Checkbox 
+							key={variantID}
+							checked={context.selectedVariantsInfo.selectedVariants.includes(variantID)}
+							onChange={(event) => {
+								const isChecked = event.target.checked;
 
-						if (isChecked)
-							context.setSelectedVariantsInfo({
-								type: 'add',
-								variants: variantID,
-							});
-						else
-							context.setSelectedVariantsInfo({
-								type: 'remove',
-								variants: variantID,
-							});
-					}}
-				/>
+								if (isChecked)
+									context.setSelectedVariantsInfo({
+										type: 'add',
+										variants: variantID,
+									});
+								else
+									context.setSelectedVariantsInfo({
+										type: 'remove',
+										variants: variantID,
+									});
+							}}
+							/>
+						)
+				) : (
+					<Tooltip content="This svtype does not supported." intent="warning">
+						<Icon icon="warning-sign" intent="warning" />
+					</Tooltip>
+				)
+			) : (
+				variants[rowIndex].alts[0].split("").some(ch => notAlt.indexOf(ch) !== -1) ? (
+					<Tooltip content="Alt info is insufficient." intent="warning">
+						<Icon icon="warning-sign" intent="warning" />
+					</Tooltip>
+				) : (
+
+					<Checkbox
+							key={variantID}
+							checked={context.selectedVariantsInfo.selectedVariants.includes(variantID)}
+							onChange={(event) => {
+								const isChecked = event.target.checked;
+
+								if (isChecked)
+									context.setSelectedVariantsInfo({
+										type: 'add',
+										variants: variantID,
+									});
+								else
+									context.setSelectedVariantsInfo({
+										type: 'remove',
+										variants: variantID,
+									});
+							}}
+					/>
+				)
+			)}				
 			</Cell>
 		);
 	};
-
+	
 	const renderAnnotationButtonCell = (rowIndex) => (
+		
 		<Cell
 			style={{
 				display: 'flex',
@@ -71,20 +116,75 @@ const VariantsTable = (props) => {
 				alignItems: 'center',
 			}}
 		>
-			<Button
-				intent={Intent.PRIMARY}
-				small
-				minimal
-				icon="arrow-right"
-				onClick={() => onOverlayOpen(true, rowIndex)}
-			/>
+			{ variants[rowIndex].svtype != null ? (
+				types.includes(variants[rowIndex].svtype.substring(0,3)) ? (
+					// notAlt.includes(variants[rowIndex].alts[0]) || types.includes(variants[rowIndex].alts[variants[rowIndex].alts.length-1]) ? (
+					(variants[rowIndex].alts[0].split("").some(ch => notAlt.indexOf(ch) !== -1) && !variants[rowIndex].svtype.includes("DEL")) ? (
+					<Tooltip content="Alt info is insufficient." intent="warning">
+						<Icon icon="warning-sign" intent="warning" />
+					</Tooltip> 
+					
+					) : (
+						<Button
+						intent={Intent.PRIMARY}
+						small
+						minimal
+						icon="arrow-right"
+						onClick={() => onOverlayOpen(true, rowIndex)}
+					/>
+					)
+					) : (
+					<Tooltip content="This svtype does not supported." intent="warning">
+						<Icon icon="warning-sign" intent="warning" />
+					</Tooltip>
+				)
+			) : (
+				variants[rowIndex].alts[0].split("").some(ch => notAlt.indexOf(ch) !== -1) ? (
+					<Tooltip content="Alt info is insufficient." intent="warning">
+						<Icon icon="warning-sign" intent="warning" />
+					</Tooltip>
+				) : (
+					<Button
+						intent={Intent.PRIMARY}
+						small
+						minimal
+						icon="arrow-right"
+						onClick={() => onOverlayOpen(true, rowIndex)}
+					/>
+				)
+			)}
 		</Cell>
 	);
 
 	const onTableSelect = (event) => {
 		console.log(event);
 		const { cols } = event[0];
-
+		var variants2 = JSON.parse(JSON.stringify(variants)); 
+		console.log(variants)
+		var idxes = []
+		for (var i = 0; i < variants.length; i++){
+			if(variants[i].svtype != null){
+				if(types.includes(variants[i].svtype.substring(0,3))){
+					if (variants[i].alts[0].split("").some(ch => notAlt.indexOf(ch) !== -1) && !variants[i].svtype.includes("DEL")){
+						idxes.push(i)
+					}
+				}
+				else{
+					idxes.push(i)
+				}
+			}
+			else{
+				if (variants[i].alts[0].split("").some(ch => notAlt.indexOf(ch) !== -1)){
+					idxes.push(i)
+				}
+			}
+		}
+		for (var i = idxes.length-1; i>=0; i-- ){
+			variants2.splice(idxes[i], 1)
+		}
+			console.log("variants2")
+			console.log(variants2)
+			console.log(variants)
 		if (cols) {
 			const selectedColumnID = cols[0];
 
@@ -92,12 +192,12 @@ const VariantsTable = (props) => {
 				if (context.selectedVariantsInfo.isAllSelected) {
 					context.setSelectedVariantsInfo({
 						type: 'remove-all',
-						variants,
+						variants : variants2,
 					});
-				} else {
+				} else {	
 					context.setSelectedVariantsInfo({
 						type: 'add-all',
-						variants,
+						variants : variants2,
 					});
 				}
 			}
