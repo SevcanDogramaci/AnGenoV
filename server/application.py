@@ -60,21 +60,34 @@ def filter_variants_by_page():
     filter_condition = request.args.get('filter')
     page_no = int(request.args.get('page_no'))
 
-    variants = variant_reader.filter_variants_by_page(vcf_file_name, filter_condition, page_no)
-    return json.dumps(OrderedDict(variants))
+    messages, variants = variant_reader.filter_variants_by_page(vcf_file_name, filter_condition, page_no)
+    ov = OrderedDict(variants)
 
-# @app.route('/filter')
-# def filter_variants():
-#     from collections import OrderedDict
-#     import json 
-
-#     vcf_file_name = request.args.get('file')
-#     filter_condition = request.args.get('filter')
-#     variants = variant_reader.filter_variants_by_eval(vcf_file_name, filter_condition)
-#     return jsonify(variants)
+    if(len(messages)>0):
+        response = MessageResponse(MessageType.ERROR, 
+                                messages, 
+                                ov)
+    else:
+        response = MessageResponse(MessageType.SUCCESS, 
+                                messages, 
+                                ov)
+    print("response",response)
+    #return json.dumps(OrderedDict(variants))
+    return json.dumps(response.get())
 
 @app.route('/annotate')
 def annotate_variants():
+    import json
+
+    vcf_file_name = request.args.get('file')
+    selected_variant_id = request.args.get('id')
+    print("Selected Variant Ids >> ", type(selected_variant_id))
+
+    annotated_variants = annotation.annotate_variant_by_id(vcf_file_name, selected_variant_id)
+    return jsonify(annotated_variants)
+
+@app.route('/annotate-multiple')
+def annotate_multiple_variants():
     import json
 
     vcf_file_name = request.args.get('file')
@@ -82,7 +95,7 @@ def annotate_variants():
     selected_variant_ids = json.loads(selected_variant_ids)
     print("Selected Variant Ids >> ", type(selected_variant_ids))
 
-    annotated_variants = annotation.annotate_variants_by_id(vcf_file_name, selected_variant_ids)
+    annotated_variants = annotation.annotate_multiple_variants_by_id(vcf_file_name, selected_variant_ids)
     return jsonify(annotated_variants)
 
 @app.route('/sv_calling/RST')
@@ -118,3 +131,6 @@ def runSurvivor():
                                 files)
     print(response)
     return jsonify(response.get())
+
+if __name__ == '__main__':
+    app.run()

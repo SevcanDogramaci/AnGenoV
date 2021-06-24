@@ -23,7 +23,21 @@ export default class Service {
 		return response.data;
 	}
 
-	static async annotateSelectedVariants(fileName, selectedVariantIds) {
+	static async annotateSingleVariant(fileName, selectedVariantId) {
+		const customAxiosInstance = axios.create({
+			baseURL: 'http://127.0.0.1:5000/',
+		});
+
+		console.log('Selected Variants >>', selectedVariantId[0]);
+
+		const response = await customAxiosInstance.get(`/annotate?file=${fileName}&id=${selectedVariantId[0]}`);
+		console.log('Response >>', response);
+		console.log('Filtered Variants >>', response.data);
+
+		return response.data;
+	}
+
+	static async annotateMultipleVariants(fileName, selectedVariantIds) {
 		const customAxiosInstance = axios.create({
 			baseURL: 'http://127.0.0.1:5000/',
 		});
@@ -33,8 +47,8 @@ export default class Service {
 
 		console.log('Selected Variants >>', selectedVariantIds);
 
-		const response = await customAxiosInstance.get(`/annotate?file=${fileName}&ids=${selectedVariantIds}`);
-
+		const response = await customAxiosInstance.get(`/annotate-multiple?file=${fileName}&ids=${selectedVariantIds}`);
+		console.log('Response >>', response);
 		console.log('Filtered Variants >>', response.data);
 
 		return response.data;

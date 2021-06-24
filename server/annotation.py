@@ -1,5 +1,6 @@
 import myvariant, requests, sys, json, re
 import variant_reader
+from eUtil import e_search
 
 # # find hgvs for each variant and annotate with Ensembl VEP
 def post_to_vep(hgvs_data):
@@ -17,7 +18,24 @@ def post_to_vep(hgvs_data):
         sys.exit()
 
     decoded = r.json()
-    return json.dumps(decoded, indent=4, sort_keys=True)
+    return decoded
+
+# # find hgvs for each variant and annotate with Ensembl VEP
+def get_from_vep(id):
+     
+    server = "https://rest.ensembl.org"
+    ext = "/vep/human/id/"
+    headers={ "Content-Type" : "application/json", "Accept" : "application/json"}
+    
+    print(server+ext+id)
+    r = requests.get(server+ext+id, headers=headers)
+    
+    if not r.ok:
+        r.raise_for_status()
+        sys.exit()
+    
+    decoded = r.json()
+    return decoded
 
 def _normalized_vcf(variant): # get from myvariant source code and modificated
     """If both ref/alt are > 1 base, and there are overlapping from the left,
@@ -73,7 +91,11 @@ def format_hgvs(variant): # get from myvariant source code and modificated
     ref = variant["ref"]
     pos = variant["pos"]
     end = variant["end"]
-    svtype = variant["svtype"]
+    try:
+        svtype = variant["svtype"]
+    except: 
+        mv = myvariant.MyVariantInfo()
+        return mv.format_hgvs(chrom, pos, ref, variant["alts"][0])
 
     print("svtype", svtype)
     chrom = str(chrom)
@@ -125,71 +147,186 @@ def format_hgvs(variant): # get from myvariant source code and modificated
         raise ValueError("Cannot convert {} into HGVS id.".format((chrom, pos, ref, alt)))
     return hgvs
 
+def annotate_snp(snp):
+    
+    print("SNP", snp)
+    try:
+        isDbSNPmember = snp["DB"]
+    except KeyError:
+        isDbSNPmember = False
+    isRsidAvailable = snp["id"].startswith("rs")
+    annotation_results = {}
 
+    # if rsid available
+    if isDbSNPmember and isRsidAvailable:
 
-# # annotate variant with eUtils
-def annotate_variants_by_id(vcf_file_name, ids):
-
-    mv = myvariant.MyVariantInfo()
-
-    variants = variant_reader.filter_variants_by_id(vcf_file_name, ids)
-    all_annotation_results = []
-    annotation_dbs = ["clinvar", "snp", "dbvar"]
-
-    for id, variant in enumerate(variants):
-        print("variant", variant)
-        #variant_hgvs = mv.format_hgvs(variant["chrom"], variant["pos"], variant["ref"], alt)
-        variant_hgvs = format_hgvs(variant)
-        annotation_results = []
-        print(variant_hgvs)
-
+        # ensemble annotation with rsid
         try:
-            ensemble_annotations =  post_to_vep([variant_hgvs])
+            ensemble_annotations =  get_from_vep(snp["id"])
         except:
             print("Oops!" + str(sys.exc_info()[0]) + "occurred.")           
             ensemble_annotations=''
 
         if ensemble_annotations != '':
-            annotation_results.append(ensemble_annotations)
-            
-        for annotation_db in annotation_dbs:
-            
-            eSearch = f"https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db={annotation_db}&term="
-            eSummary = f"https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db={annotation_db}&id="
-            optionalParams = "&retmode=json"
-            
+            print("ENSEMBLE with RSID :")
+            print(json.dumps(ensemble_annotations, indent=4, sort_keys=True))
+            annotation_results["ENSEMBLE"] = ensemble_annotations
 
-            print(variant_hgvs)
+        dbSNPResults = e_search("snp", snp, snp["id"] + "[Reference SNP ID]")
+        if len(dbSNPResults) > 0:
+            annotation_results["dbSNP"] = dbSNPResults
 
-            r = requests.post(eSearch + variant_hgvs + optionalParams)
+        print("RESULTS:")
+        print(annotation_results)
+        all_annotation_results = {"id": snp["id"], "annotations": annotation_results}
+    else:
+        variant_hgvs = format_hgvs(snp)
+        try:
+            ensemble_annotations =  post_to_vep([variant_hgvs])
+            print("HGVS: ", variant_hgvs)
 
-            if not r.ok:
-                r.raise_for_status()
-                sys.exit()
+            if ensemble_annotations != '':
+                print("ENSEMBLE with HGVS :")
+                print(json.dumps(ensemble_annotations, indent=4, sort_keys=True))
+                annotation_results["ENSEMBLE"] = ensemble_annotations
+        except:
+            print("Oops!" + str(sys.exc_info()[0]) + "occurred.")           
+            ensemble_annotations=''
+        
+        dbSNPResults = e_search("snp", snp, variant_hgvs)
+        if len(dbSNPResults) > 0:
+            annotation_results["dbSNP"] = dbSNPResults
 
-            decoded = r.json()
-            foundUIDs = decoded["esearchresult"]["idlist"]
-
-            if(len(decoded["esearchresult"]["idlist"]) > 0):
-                print(">>", foundUIDs)
-
-                for UID in foundUIDs:
-                    print(eSummary + UID + optionalParams)
-                    fetch_r = requests.post(eSummary + UID + optionalParams)
-
-                    if not fetch_r.ok:
-                        fetch_r.raise_for_status()
-                        sys.exit()
-
-                    annotation_result = json.dumps(fetch_r.json(), indent=4, sort_keys=True)
-                    annotation_results.append(annotation_result)
-                    print(annotation_result)
-                    print()
-            else:
-                print(">> No UIDs")
-                print()
-
-        all_annotation_results.append({"id": ids[id], "annotations": annotation_results})
+        all_annotation_results = {"id": snp["id"], "annotations": annotation_results}
 
     print(all_annotation_results)
     return all_annotation_results
+
+
+# # annotate variant with eUtils
+def annotate_variant_by_id(vcf_file_name, id):
+
+    variant = variant_reader.filter_variants_by_id(vcf_file_name, id)[0]
+
+    try:
+        print(variant)
+        # annotate snp
+        if variant["svtype"]:
+            # annotate sv
+            variant_hgvs = format_hgvs(variant)
+            annotation_results = {}
+            print("HGVS:", variant_hgvs)
+
+            # ensemble
+            try:
+                ensemble_annotations =  post_to_vep([variant_hgvs])
+            except:
+                print("Oops!" + str(sys.exc_info()[0]) + "occurred.")           
+                ensemble_annotations=''
+
+            if ensemble_annotations != '':
+                annotation_results["ENSEMBLE"] = ensemble_annotations
+                print("ENSEMBLE RESULT:")
+                print(ensemble_annotations)
+
+            # dbvar
+            query = f'{variant["chrom"]}[Chr] AND ({variant["pos"]}[ChrPos] OR {variant["end"]}[ChrEnd])' 
+            dbVarResults = e_search("dbvar", variant, query)
+            if len(dbVarResults) > 0:
+                annotation_results["dbVar"] = dbVarResults
+            
+            all_annotation_results = {"id": variant["id"], "annotations": annotation_results}
+
+        print(all_annotation_results)
+        return all_annotation_results
+
+    except KeyError:
+        return annotate_snp(variant)
+        
+
+# # annotate multiple variants
+def annotate_multiple_variants_by_id(vcf_file_name, ids):
+    from collections import OrderedDict
+
+    variants = variant_reader.filter_variants_by_id(vcf_file_name, ids)
+
+    try:
+        print(variants[0])
+        # annotate snps
+        if variants[0]["svtype"]:
+            # annotate svs
+            all_annotation_results = []
+
+            for id, variant in enumerate(variants):
+
+                variant_hgvs = format_hgvs(variant)
+                annotation_results = []
+                print("HGVS:", variant_hgvs)
+
+                # ensemble
+                try:
+                    ensemble_annotations =  post_to_vep([variant_hgvs])
+                except:
+                    print("Oops!" + str(sys.exc_info()[0]) + "occurred.")           
+                    ensemble_annotations=''
+
+                if ensemble_annotations != '':
+                    print("ENSEMBLE RESULT:")
+                    print(ensemble_annotations)
+                    print(type(ensemble_annotations))
+                    annotation_results.append(ensemble_annotations[0]["most_severe_consequence"])
+
+                
+                all_annotation_results.append(OrderedDict({"id": variant["id"], "most_severe_consequence": annotation_results}))
+        print(all_annotation_results)
+        return all_annotation_results
+
+    except KeyError:
+        
+        all_annotation_results = []
+        
+        for id, snp in enumerate(variants):
+            print("SNP", snp)
+
+            isDbSNPmember = snp["DB"]
+            isRsidAvailable = snp["id"].startswith("rs")
+            annotation_results = []
+
+            # if rsid available
+            if isDbSNPmember and isRsidAvailable:
+
+                # ensemble annotation with rsid
+                try:
+                    ensemble_annotations =  get_from_vep(snp["id"])
+                except:
+                    print("Oops!" + str(sys.exc_info()[0]) + "occurred.")           
+                    ensemble_annotations=''
+
+                if ensemble_annotations != '':
+                    print("ENSEMBLE with RSID :")
+                    print(json.dumps(ensemble_annotations, indent=4, sort_keys=True))
+                    annotation_results.append(ensemble_annotations[0]["most_severe_consequence"])
+        
+                print("RESULTS:")
+                print(annotation_results)
+                all_annotation_results.append(OrderedDict({"id": snp["id"], "most_severe_consequence": annotation_results}))
+            else:
+                variant_hgvs = format_hgvs(snp)
+                try:
+                    ensemble_annotations =  post_to_vep([variant_hgvs])
+                    print("HGVS: ", variant_hgvs)
+
+                    if ensemble_annotations != '':
+                        print("ENSEMBLE with HGVS :")
+                        print(json.dumps(ensemble_annotations, indent=4, sort_keys=True))
+                        annotation_results.append(ensemble_annotations[0]["most_severe_consequence"])
+                except:
+                    print("Oops!" + str(sys.exc_info()[0]) + "occurred.")           
+                    ensemble_annotations=''
+
+                all_annotation_results.append(OrderedDict({"id": snp["id"], "most_severe_consequence": annotation_results}))
+
+        print(all_annotation_results)
+        return all_annotation_results
+
+# annotate_multiple_variants_by_id("/home/sevcan/Desktop/dbsnp/tutorials/Variation Services/test.vcf", None)
