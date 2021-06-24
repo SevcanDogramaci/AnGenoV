@@ -29,10 +29,9 @@ const VariantInfoOverlay = ({ variantInfo, onClose }) => {
 			<div
 				style={{
 					width: '90%',
-					height: '80vh',
 					margin: '10vh',
 				}}
-				className={[Classes.CARD]}
+				className={[Classes.CARD, Classes.OVERLAY_SCROLL_CONTAINER]}
 			>
 				<Tabs
 					renderActiveTabPanelOnly
