@@ -5,13 +5,13 @@ class MessageType(enum.Enum):
    ERROR = 2
 
 class MessageResponse:
-    def __init__(self, messageType, message, fileName=""):
+    def __init__(self, messageType, message, returnObject=""):
         self.messageType = messageType
         self.message = message
-        self.fileName = fileName
+        self.returnObject = returnObject
 
     def __str__(self):
-        return { "message": self.message, "messageType": self.messageType.name, "fileName": self.fileName }.__str__()
+        return { "message": self.message, "messageType": self.messageType.name, "returnObject": self.returnObject }.__str__()
 
     def get(self):
-        return { "message": self.message, "messageType": self.messageType.name, "fileName": self.fileName }
+        return { "message": self.message, "messageType": self.messageType.name, "returnObject": self.returnObject }
