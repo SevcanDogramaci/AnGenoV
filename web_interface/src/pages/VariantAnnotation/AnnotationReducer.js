@@ -48,6 +48,14 @@ export function VariantsReducer(state, action) {
 				running: true,
 			};
 
+		case 'set-vcf-file':
+			console.log('VCF file chosen >>', action.file.target.files[0].name);
+			return {
+				...state,
+				VCFfile: action.file.target.files[0],
+				currentPageNo: 0,
+			};
+
 		case 'finish-running':
 			return {
 				...state,

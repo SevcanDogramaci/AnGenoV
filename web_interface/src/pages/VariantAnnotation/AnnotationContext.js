@@ -9,8 +9,23 @@ const AnnotationContextProvider = (props) => {
 	console.log('Annotation Context');
 	const { children } = props;
 
-	const [VCFfile, setVCFfile] = useState(null);
+	// const [VCFfile, setVCFfile] = useState(null);
+
+	const [BAMfile, setBAMfile] = useState(null);
+	const [readOption, setReadOption] = useState('hg38');
+
+	const updateReadOption = (newReadOption) => {
+		console.log(`${newReadOption} clicked`);
+		setReadOption(newReadOption);
+	};
+
+	const handleBAMFileChange = (event) => {
+		console.log('BAM file chosen >>', event.target.files);
+		setBAMfile(event.target.files);
+	};
+
 	const [variantsInfo, setVariantsInfo] = useReducer(VariantsReducer, {
+		VCFfile: null,
 		running: false,
 		variants: [],
 		totalPageNumber: 0,
@@ -35,10 +50,10 @@ const AnnotationContextProvider = (props) => {
 		setIsMultipleSelectionEnabled(newMultipleSelectionInfo);
 	};
 
-	const handleFileChange = (event) => {
-		console.log('VCF file chosen >>', event.target.files[0].name);
-		setVCFfile(event.target.files[0]);
-	};
+	// const handleFileChange = (event) => {
+	// 	console.log('VCF file chosen >>', event.target.files[0].name);
+	// 	setVCFfile(event.target.files[0]);
+	// };
 
 	const handleVariantsInfoChange = (newVariantsInfo) => setVariantsInfo(newVariantsInfo);
 
@@ -51,10 +66,14 @@ const AnnotationContextProvider = (props) => {
 			value={{
 				variantsInfo,
 				selectedVariantsInfo,
-				VCFfile,
+				// VCFfile,
+				BAMfile,
+				readOption,
 				multipleSelectionInfo,
 
-				setVCFfile: handleFileChange,
+				// setVCFfile: handleFileChange,
+				setReadOption: updateReadOption,
+				setBAMfile: handleBAMFileChange,
 				setVariantsInfo: handleVariantsInfoChange,
 				setSelectedVariantsInfo: handleSelectedVariantsInfoChange,
 				setIsMultipleSelectionEnabled: handleMultipleSelectionInfoChange,
