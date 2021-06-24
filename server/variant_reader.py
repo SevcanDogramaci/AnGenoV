@@ -31,6 +31,10 @@ def get_variants(vcf_file_name) :
                 variant_info["genotype"] = [s['GT'] for s in rec.samples.values()]
             except:
                 pass
+            try:
+                variant_info["DB"] = rec.info["DB"]
+            except:
+                pass
 
             variant_info["ref"] = rec.ref
             variant_info["alts"] = rec.alts
@@ -84,7 +88,9 @@ RESERVED_WORDS = [
 	{ "name": 'genotype', "pattern": 'genotype(==|!=)"(0|1)+"'},
 ]
 
-def replace_chrom_filter(reservedWord, filter_condition):
+
+def replace_chrom_filter(reservedWord, filter_condition, variant):
+    print("replace_chrom_filter")
     import re
 
     pattern = reservedWord["pattern"]
@@ -95,34 +101,73 @@ def replace_chrom_filter(reservedWord, filter_condition):
         res = res[0]
         value = res[1].replace('chr', '') # remove chr
         value = int(value.replace('"', '')) # convert to number
+        value = int(variant["chrom"]) 
         return filter_condition.replace(reservedWord["name"], f'int(variant["{reservedWord["name"]}"])')
     except:
         return filter_condition.replace(reservedWord["name"], f'variant["{reservedWord["name"]}"]')
 
 
-def filter_variants_by_eval(vcf_file_name, filter_condition):
+def replace_genotype_filter(reservedWord, filter_condition):
+    print("replace_genotype_filter", reservedWord["name"])
+    print(f'''"".join([str(el) for el in variant["genotype"][0]])''')
+    
+    return filter_condition.replace(reservedWord["name"], f'''"".join([str(el) for el in variant["genotype"][0]])''')
+
+
+def filter_variants_by_eval(vcf_file_name, filter_condition, responseMessages):
+    print("filter_variants_by_eval")
     variants = get_variants(vcf_file_name)["variants"]
 
     for reservedWord in RESERVED_WORDS:
-        if reservedWord["name"] == 'chrom':
-            filter_condition = replace_chrom_filter(reservedWord, filter_condition)
-        else:
-            filter_condition = filter_condition.replace(reservedWord["name"], f'variant["{reservedWord["name"]}"]')
+        if reservedWord["name"] != 'chrom':
+            if reservedWord["name"] == 'genotype':
+                print(type("".join([str(el) for el in variants[0]["genotype"][0]])))
+                filter_condition = replace_genotype_filter(reservedWord, filter_condition)
+            else:
+                filter_condition = filter_condition.replace(reservedWord["name"], f'variant["{reservedWord["name"]}"]')
         print('After:', filter_condition)
     print('Last:', filter_condition)
 
-    try:
-        filtered_variants = list(filter(lambda variant: eval(filter_condition), variants))
-        print(filtered_variants)
-        return filtered_variants
-    except ValueError:
-        print("Invalid comparison between integer and string")
-        return []
+    filtered_variants = []
+
+    for variant in variants:
+        print(variant["chrom"], variant["genotype"][0])
+        if 'chrom' in filter_condition:
+            print("chrom filter")
+            condition = replace_chrom_filter(RESERVED_WORDS[0], filter_condition, variant)
+        else:
+            condition = filter_condition
+
+        try:
+            isTrue = eval(condition)
+            print("Eval:", eval(condition, {"variant": variant}))
+            if isTrue:
+                filtered_variants.append(variant)
+        except ValueError:
+            print("Invalid comparison between integer and string")
+            responseMessages.append("Invalid comparison between integer and string")
+            return []
+        except SyntaxError:
+            print("Invalid Syntax")
+            responseMessages.append("Invalid Syntax")
+            return []
+        except NameError:
+            print("Use \"\" for string values")
+            responseMessages.append("Use \"\" for string values")
+            return []
+        except:
+            print("An error occured")
+            responseMessages.append("An error occured")
+            return []
+
+    print(filtered_variants)
+    return filtered_variants
 
 def filter_variants_by_page(vcf_file_name, filter_condition, page_no):
 
+    responseMessages=[]
     filtered_variants = {}
-    variants = filter_variants_by_eval(vcf_file_name, filter_condition)
+    variants = filter_variants_by_eval(vcf_file_name, filter_condition, responseMessages)
 
     filtered_variants["variants"] = variants[0:]
 
@@ -141,7 +186,8 @@ def filter_variants_by_page(vcf_file_name, filter_condition, page_no):
 
     print(filtered_variants)
 
-    return filtered_variants
+    print("response",responseMessages)
+    return (responseMessages,filtered_variants)
 
 
 # filter_variants_by_page("/home/sevcan/Desktop/dbsnp/tutorials/Variation Services/test_vcf.vcf", "pos>10100", 0)
@@ -149,3 +195,4 @@ def filter_variants_by_page(vcf_file_name, filter_condition, page_no):
 # filter_variants_by_page("/home/sevcan/Desktop/dbsnp/tutorials/Variation Services/test.vcf", 'chrom <    2', 0)
 # replace_chrom_filter(RESERVED_WORDS[0], 'chrom < "chr1"')
 # replace_chrom_filter(RESERVED_WORDS[0], 'chrom < chr1')
+# filter_variants_by_page("/home/sevcan/Desktop/VCF_for_test/outputDelly.vcf", 'chrom == 1', 0)
