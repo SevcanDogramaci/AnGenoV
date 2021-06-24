@@ -12,8 +12,8 @@ if (process.env.NODE_ENV !== undefined && process.env.NODE_ENV === 'development'
 
 function createMainWindow() {
 	mainWindow = new BrowserWindow({
-		width: 1100,
-		height: 800,
+		minWidth: 800,
+		minHeight: 600,
 		show: false,
 		webPreferences: {
 			nodeIntegration: true,
@@ -71,6 +71,25 @@ app.on('activate', () => {
 
 // Stop error
 app.allowRendererProcessReuse = true;
+
+// used to show error box
+ipcMain.handle('show-error-dialog', (event, arg) => {
+	console.log('show-error-dialog is triggered', arg);
+	// const { files } = arg;
+
+	const options = {
+		type: 'error',
+		buttons: ['OK'],
+		defaultId: 0,
+		title: 'Error',
+		message: 'An error occurred',
+		detail: 'Error message',
+	};
+
+	dialog.showMessageBox(options).then((response) => {
+		console.log(response);
+	});
+});
 
 // used to delete a file
 ipcMain.handle('delete-config-file', async (event, arg) => {
@@ -204,28 +223,3 @@ ipcMain.on('show-open-dialog', (event, arg) => {
 		});
 	});
 });
-
-// Used to listen logs to log files
-/* 
-ipcMain.on('log-file-request', (event, arg) => {
-
-	console.log(">> async log-file-request is triggered", arg);
-
-	var data = '';
-	const fs = require('fs');
-	const path = require('path');
-	const fileName = path.join(__dirname, 'deneme.txt');
-
-	const readStream = fs.createReadStream(fileName, {encoding: 'utf8', highWaterMark: 100});
-
-	readStream.on('data', function(chunk) {
-		data += chunk;
-		console.log("Data chunk >> ", chunk);
-		event.reply('log-file-reply', {"data": data, "finished": false});
-
-	}).on('end', function() {
-		
-		event.reply('log-file-reply', {"data": data, "finished": true});
-	});
-})
- */
