@@ -1,5 +1,5 @@
-import React, { useEffect, useContext } from 'react';
-import { Checkbox, Button, Spinner, Intent, Tooltip, Icon } from '@blueprintjs/core';
+import React, { useState, useEffect, useContext } from 'react';
+import { Checkbox, Button, Spinner, Intent, Divider, Tooltip, Icon, Position } from '@blueprintjs/core';
 import { Column, Table, SelectionModes, Cell } from '@blueprintjs/table';
 import TablePaginator from './TablePaginator';
 import { AnnotationContext } from '../AnnotationContext';
@@ -28,7 +28,8 @@ const VariantsTable = (props) => {
 	}, [context, context.multipleSelectionInfo]);
 
 	const renderDefaultTableCell = (rowIndex, key) => <Cell>{variants[rowIndex][key]}</Cell>;
-
+	// const types = 'DEL, INV, INS, DUP,';
+	// const notAlt = '[<>]';
 	const renderCheckableColumnCell = (rowIndex) => {
 		const variantID = variants[rowIndex].id;
 
@@ -178,12 +179,12 @@ const VariantsTable = (props) => {
 		console.log(variants);
 
 		if (cols) {
-			console.log("Here", cols);
+			console.log('Here', cols);
 			const selectedColumnID = cols[0];
-			console.log("Here", selectedColumnID);
+			console.log('Here', selectedColumnID);
 
 			if (context.multipleSelectionInfo.enabled && selectedColumnID === 0) {
-				console.log("Here2");
+				console.log('Here2');
 				if (context.selectedVariantsInfo.isAllSelected) {
 					context.setSelectedVariantsInfo({
 						type: 'remove-all',

@@ -28,15 +28,22 @@ const HomePage = () => (
 				name="Variant Calling Module"
 				explanation="Align and assembly sequences, call SVs in Illumina and long reads, merge SVs"
 				buttonText="Learn More"
+				link="https://docs.google.com/document/d/1JhV0qWTLmxxwDjGNkJJSzNc1k2jG4oWr/edit#heading=h.xdfd4hiyn919"
 			/>
 
 			<ModuleCard
 				name="Variant Annotation Module"
 				explanation="Annotate variants using the most popular databases"
 				buttonText="Learn More"
+				link="https://docs.google.com/document/d/1JhV0qWTLmxxwDjGNkJJSzNc1k2jG4oWr/edit#heading=h.804tx7ouca3v"
 			/>
 
-			<ModuleCard name="Variant Visualization Module" explanation="Visualize variants" buttonText="Learn More" />
+			<ModuleCard 
+				name="Variant Visualization Module" 
+				explanation="Visualize variants" 
+				buttonText="Learn More" 
+				link="https://docs.google.com/document/d/1JhV0qWTLmxxwDjGNkJJSzNc1k2jG4oWr/edit#heading=h.804tx7ouca3v"
+			/>
 		</div>
 	</div>
 );

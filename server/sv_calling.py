@@ -39,6 +39,15 @@ def runSVCallerTool (referenceFile, alignedFile, toolName, allArgs):
             toolOut += f.read()
             f.close()
 
+        proc=psutil.Process(popen.pid)
+        returncode= proc.wait()
+        print(returncode)
+
+        if returncode != 0 :
+            success = False
+        else:
+            success = True
+        
     toolName = toolName.lower()
     return os.getcwd() + "/temp/ToolsOutputs/"  + toolName
 

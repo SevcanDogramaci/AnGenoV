@@ -175,6 +175,7 @@ const VariantAnnotationPage = () => {
 								file: event,
 							});
 					}}
+					inputProps={{ accept: '.vcf, .bcf' }}
 				/>
 				<Button
 					style={{ paddingLeft: '10%', paddingRight: '10%' }}

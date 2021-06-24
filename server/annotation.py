@@ -92,11 +92,9 @@ def format_hgvs(variant): # get from myvariant source code and modificated
     pos = variant["pos"]
     end = variant["end"]
     try:
-        svtype = variant["svtype"]
-    except: 
-        mv = myvariant.MyVariantInfo()
-        return mv.format_hgvs(chrom, pos, ref, variant["alts"][0])
-
+        svtype = variant["svtype"][0:3]
+    except:
+        svtype = "-"
     print("svtype", svtype)
     chrom = str(chrom)
     if chrom.lower().startswith('chr'):
