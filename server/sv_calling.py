@@ -23,12 +23,10 @@ def runSVCallerTool (referenceFile, alignedFile, toolName, allArgs):
         #cmd="x-terminal-emulator -e 'echo " + toolName + " is running...;echo;" + arg + " 2>&1 | tee log.txt'"
         cmd="x-terminal-emulator -e \"bash -c 'set -o pipefail;echo " + toolName + " is running...;echo;" + arg + " 2>&1 | tee log.txt'\""
         print (cmd)
-        popen=subprocess.Popen(cmd, shell=True, executable='/bin/bash', stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        popen=subprocess.run(cmd, shell=True, executable='/bin/bash', stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         
-        proc=psutil.Process(popen.pid)
-        returncode=proc.wait()
+        returncode=popen.returncode
         print(returncode)
-        print(popen.stdout.read())
         f = open("log.txt", "r")
         if returncode != 0 :
             success = False
@@ -38,15 +36,6 @@ def runSVCallerTool (referenceFile, alignedFile, toolName, allArgs):
             success = True
             toolOut += f.read()
             f.close()
-
-        proc=psutil.Process(popen.pid)
-        returncode= proc.wait()
-        print(returncode)
-
-        if returncode != 0 :
-            success = False
-        else:
-            success = True
         
     toolName = toolName.lower()
     return os.getcwd() + "/temp/ToolsOutputs/"  + toolName
