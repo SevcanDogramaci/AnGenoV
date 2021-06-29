@@ -51,8 +51,8 @@ const Outputs = (props) => {
 							justifyContent: 'center',
 						}}
 					>
-						<Pre style={{ display: 'flex', flexDirection: 'column' }}>
-							<RunningText stop={context.runningInfo.running === false} />
+						<Pre style={{ display: 'flex', flexDirection: 'column', maxWidth: '33vw', overflow: 'auto' }}>
+						{!isRunning(context.runningInfo) && <RunningText stop={context.runningInfo.running === false} />}
 							{isRunning(context.runningInfo) &&
 								context.runningInfo.responseMessages.message.map((element, id) => <div>{element}</div>)}
 						</Pre>
@@ -73,7 +73,7 @@ const Outputs = (props) => {
 							</div>
 
 							<div style={{ width: '50%', marginTop: '1%' }}>
-								{context.runningInfo.responseMessages.returnObject.length && (
+								{context.runningInfo.responseMessages.returnObject.length ? (
 									<Button
 										fill
 										onClick={(e) => {
@@ -83,7 +83,7 @@ const Outputs = (props) => {
 									>
 										Save
 									</Button>
-								)}
+								) : <p></p>}
 							</div>
 						</>
 					)}
