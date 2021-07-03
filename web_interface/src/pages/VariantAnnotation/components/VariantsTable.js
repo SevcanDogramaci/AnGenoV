@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { Checkbox, Button, Spinner, Intent, Divider, Tooltip, Icon, Position } from '@blueprintjs/core';
+import React, { useEffect, useContext } from 'react';
+import { Checkbox, Button, Spinner, Intent, Tooltip, Icon } from '@blueprintjs/core';
 import { Column, Table, SelectionModes, Cell } from '@blueprintjs/table';
 import TablePaginator from './TablePaginator';
 import { AnnotationContext } from '../AnnotationContext';
@@ -28,8 +28,6 @@ const VariantsTable = (props) => {
 	}, [context, context.multipleSelectionInfo]);
 
 	const renderDefaultTableCell = (rowIndex, key) => <Cell>{variants[rowIndex][key]}</Cell>;
-	// const types = 'DEL, INV, INS, DUP,';
-	// const notAlt = '[<>]';
 	const renderCheckableColumnCell = (rowIndex) => {
 		const variantID = variants[rowIndex].id;
 
@@ -253,7 +251,7 @@ const VariantsTable = (props) => {
 					outlined
 					intent={Intent.PRIMARY}
 					style={{ marginTop: '2%' }}
-					disabled={isAnnotationRunning}
+					disabled={!context.selectedVariantsInfo.selectedVariants.size || isAnnotationRunning}
 					onClick={() => {
 						onAnnotateMultiple(context.selectedVariantsInfo.selectedVariants);
 					}}
