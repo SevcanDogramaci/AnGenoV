@@ -1,6 +1,7 @@
 import React, { useReducer, useState } from 'react';
 
 import { Set } from 'immutable';
+import { ipcRenderer } from 'electron';
 import { AnnotationReducer, VariantsReducer } from './AnnotationReducer';
 
 export const AnnotationContext = React.createContext(['light', () => {}]);
@@ -21,7 +22,22 @@ const AnnotationContextProvider = (props) => {
 
 	const handleBAMFileChange = (event) => {
 		console.log('BAM file chosen >>', event.target.files);
+		const path = require('path');
+		const notes = Array.from(event.target.files).map((file) => file.name);
+		// const base = Array.from(event.target.files).map((file) => file.path.split('.'));
+		const base = [];
+
+		for (let i = 0; i < notes.length; i++) {
+			base.push(path.extname(notes[i]));
+		}
+
+		if (base.includes('.gz') && !base.includes('.bai')) {
+			ipcRenderer.invoke('show-error-dialog', {
+				message: ['Upload an index file(.bai) along with your bam file'],
+			});
+		}
 		setBAMfile(event.target.files);
+		console.log('BAM file chosen >>', event.target.files);
 	};
 
 	const [variantsInfo, setVariantsInfo] = useReducer(VariantsReducer, {

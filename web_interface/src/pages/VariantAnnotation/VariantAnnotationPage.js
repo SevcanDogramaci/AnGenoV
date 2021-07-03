@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { Button, FileInput, Spinner, Menu, MenuItem, Popover, PopoverPosition } from '@blueprintjs/core';
+import { Button, FileInput, Spinner, Menu, MenuItem, Popover, PopoverPosition, Alert } from '@blueprintjs/core';
 
 import Service from '../../services/Service';
 import VariantsTable from './components/VariantsTable';
@@ -136,7 +136,13 @@ const VariantAnnotationPage = () => {
 				<FileInput
 					buttonText="Browse"
 					style={{ marginRight: '4%' }}
-					text={context.BAMfile ? context.BAMfile.name : 'Choose file'}
+					text={
+						context.BAMfile
+							? Array.from(context.BAMfile).length > 0
+								? Array.from(context.BAMfile).map((file) => file.name)
+								: 'Choose files'
+							: 'Choose files'
+					}
 					onInputChange={(event) => context.setBAMfile(event)}
 					inputProps={{ multiple: 'true', accept: '.bai, .csi, .tbi, .idx, .crai, .bam, .cram, .vcf, .gz' }}
 				/>
