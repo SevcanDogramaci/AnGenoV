@@ -138,7 +138,7 @@ const VariantAnnotationPage = () => {
 					style={{ marginRight: '4%' }}
 					text={context.BAMfile ? context.BAMfile.name : 'Choose file'}
 					onInputChange={(event) => context.setBAMfile(event)}
-					inputProps={{ multiple: 'true', accept: '.bai, .csi, .tbi, .idx, .crai,.bam, .vcf, .gz' }}
+					inputProps={{ multiple: 'true', accept: '.bai, .csi, .tbi, .idx, .crai, .bam, .cram, .vcf, .gz' }}
 				/>
 
 				<Popover
