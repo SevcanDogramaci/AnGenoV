@@ -121,7 +121,6 @@ def filter_variants_by_eval(vcf_file_name, filter_condition, responseMessages):
     for reservedWord in RESERVED_WORDS:
         if reservedWord["name"] != 'chrom':
             if reservedWord["name"] == 'genotype':
-                print(type("".join([str(el) for el in variants[0]["genotype"][0]])))
                 filter_condition = replace_genotype_filter(reservedWord, filter_condition)
             else:
                 filter_condition = filter_condition.replace(reservedWord["name"], f'variant["{reservedWord["name"]}"]')

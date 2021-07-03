@@ -75,7 +75,7 @@ app.allowRendererProcessReuse = true;
 // used to show error box
 ipcMain.handle('show-error-dialog', (event, arg) => {
 	console.log('show-error-dialog is triggered', arg);
-	// const { files } = arg;
+	const { message } = arg;
 
 	const options = {
 		type: 'error',
@@ -83,7 +83,7 @@ ipcMain.handle('show-error-dialog', (event, arg) => {
 		defaultId: 0,
 		title: 'Error',
 		message: 'An error occurred',
-		detail: 'Error message',
+		detail: message[0],
 	};
 
 	dialog.showMessageBox(options).then((response) => {

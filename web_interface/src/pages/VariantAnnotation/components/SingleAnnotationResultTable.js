@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Spinner } from '@blueprintjs/core';
 import { Column, Table, Cell } from '@blueprintjs/table';
 
+import { ipcRenderer } from 'electron';
 import { AnnotationContext } from '../AnnotationContext';
 
 import Service from '../../../services/Service';
@@ -16,6 +17,10 @@ const SingleAnnotationResultTable = ({ variant }) => {
 
 		Service.annotateSingleVariant(context.variantsInfo.VCFfile.path, [variant.id]).then((result) => {
 			if (mounted) {
+				if (result.messageType === 'ERROR') {
+					console.log('Hereeeeee');
+					ipcRenderer.invoke('show-error-dialog', { message: result.message });
+				}
 				const resAnnotations = result.annotations;
 				console.log(resAnnotations);
 				if (resAnnotations) setAnnotations(resAnnotations);

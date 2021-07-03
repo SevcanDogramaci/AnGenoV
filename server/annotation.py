@@ -249,7 +249,6 @@ def annotate_multiple_variants_by_id(vcf_file_name, ids):
     variants = variant_reader.filter_variants_by_id(vcf_file_name, ids)
 
     try:
-        print(variants[0])
         # annotate snps
         if variants[0]["svtype"]:
             # annotate svs

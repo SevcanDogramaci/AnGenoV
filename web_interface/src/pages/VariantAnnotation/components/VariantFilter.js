@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { Button, Icon, InputGroup, Intent, Tooltip } from '@blueprintjs/core';
 
+import { ipcRenderer } from 'electron';
 import { AnnotationContext } from '../AnnotationContext';
 import Service from '../../../services/Service';
 
@@ -36,7 +37,13 @@ const VariantFilter = () => {
 		context.setVariantsInfo({ type: 'start-running' });
 		Service.filterVariants(context.variantsInfo.VCFfile.path, filterCondition, 0).then((response) => {
 			console.log('FilterVariants bitti');
-			console.log(response.message);
+			console.log(response.message, response.messageType);
+
+			if (response.messageType === 'ERROR') {
+				console.log("Hereeeeee")
+				ipcRenderer.invoke('show-error-dialog', { message: response.message });
+			}
+
 			const result = response.returnObject;
 
 			if (result.variants.length > 0) {

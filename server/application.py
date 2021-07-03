@@ -2,6 +2,7 @@
 # third-party imports
 from flask import Flask, render_template, request, redirect, abort, flash, url_for, jsonify
 from werkzeug.utils import secure_filename
+from werkzeug.exceptions import InternalServerError
 from flask_cors import CORS
 
 # local application imports
@@ -22,6 +23,18 @@ CORS(app)
 #                 "fileName": ["deneme.txt"],
 #                 "message": ["sucessfull !"]
 #         }
+
+@app.errorhandler(InternalServerError)
+def handle_internal_server_error(err):
+    import json
+
+    response = MessageResponse(MessageType.ERROR, 
+                                [err.description], 
+                                [])
+    print("response",response)
+
+    return json.dumps(response.get())
+
 
 @app.route('/get_variants_by_page')
 def get_variants_by_page():
