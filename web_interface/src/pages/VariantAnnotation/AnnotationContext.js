@@ -31,9 +31,14 @@ const AnnotationContextProvider = (props) => {
 			base.push(path.extname(notes[i]));
 		}
 
-		if (base.includes('.gz') && !base.includes('.bai')) {
+		if (base.includes('.bam') && !base.includes('.bai')) {
 			ipcRenderer.invoke('show-error-dialog', {
 				message: ['Upload an index file(.bai) along with your bam file'],
+			});
+		}
+		if (base.includes('.cram') && !base.includes('.crai')) {
+			ipcRenderer.invoke('show-error-dialog', {
+				message: ['Upload an index file(.crai) along with your bam file'],
 			});
 		}
 		setBAMfile(event.target.files);

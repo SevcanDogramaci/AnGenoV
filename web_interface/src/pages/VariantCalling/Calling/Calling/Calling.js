@@ -66,7 +66,7 @@ const Calling = (props) => {
 				justifyContent: 'center',
 			}}
 		>
-			<h3 className="bp3-heading">SV Calling</h3>
+			<h3 className="bp3-heading">Variant Calling</h3>
 			<p>Choose the algorithms you want to run :</p>
 
 			<div

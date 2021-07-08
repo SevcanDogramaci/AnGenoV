@@ -21,7 +21,7 @@ def runSVCallerTool (referenceFile, alignedFile, toolName, allArgs):
    
         #popen=subprocess.run("x-terminal-emulator -e \"echo " + toolName + " is running...;echo;" + arg + "\"" + " > log.txt", shell=True, capture_output=True, text=True)
         #cmd="x-terminal-emulator -e 'echo " + toolName + " is running...;echo;" + arg + " 2>&1 | tee log.txt'"
-        cmd="x-terminal-emulator -e \"bash -c 'set -o pipefail;echo " + toolName + " is running...;echo;" + arg + " 2>&1 | tee log.txt'\""
+        cmd="x-terminal-emulator -e \"bash -c \\\"set -o pipefail;echo " + toolName + " is running...;echo;" + arg + " 2>&1 | tee log.txt\\\"\""
         print (cmd)
         popen=subprocess.run(cmd, shell=True, executable='/bin/bash', stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         

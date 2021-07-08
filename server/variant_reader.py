@@ -86,6 +86,8 @@ RESERVED_WORDS = [
 	{ "name": 'id', "pattern": 'id(==|!=)(".*")' },
 	{ "name": 'svtype', "pattern": 'svtype(==|!=)(".*")' },
 	{ "name": 'genotype', "pattern": 'genotype(==|!=)"(0|1)+"'},
+    { "name": 'ref', "pattern": 'ref(==|!=)(".*")' },
+    { "name": 'alts', "pattern": 'alts(==|!=)(".*")' },
 ]
 
 
@@ -160,7 +162,11 @@ def filter_variants_by_eval(vcf_file_name, filter_condition, responseMessages):
             return []
 
     print(filtered_variants)
-    return filtered_variants
+    if len(filtered_variants)!=0:
+        return filtered_variants
+    else:
+        responseMessages.append("No variants were found meeting the condition!")
+        return []
 
 def filter_variants_by_page(vcf_file_name, filter_condition, page_no):
 

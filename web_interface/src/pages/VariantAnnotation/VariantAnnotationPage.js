@@ -35,18 +35,20 @@ const VariantAnnotationPage = () => {
 	};
 
 	const handleOverlayChange = (open, variantID) => {
-		if (variantID !== undefined) {
-			setOverlayVariantInfo({
-				open,
-				variant: context.variantsInfo.variants[variantID],
-			});
-		} else {
-			setOverlayVariantInfo({
-				...overlayVariantInfo,
-				open,
-			});
-		}
-	};
+        if (variantID !== undefined) {
+            setOverlayVariantInfo({
+                open,
+                variant: context.variantsInfo.filteredVariants
+                    ? context.variantsInfo.filteredVariants[variantID]
+                    : context.variantsInfo.variants[variantID],
+            });
+        } else {
+            setOverlayVariantInfo({
+                ...overlayVariantInfo,
+                open,
+            });
+        }
+    };
 
 	const handleAnnotateMultiple = (variantIDsToAnnotate) => {
 		console.log('Annotate variants with ids ', variantIDsToAnnotate.toList().toArray());
@@ -162,7 +164,7 @@ const VariantAnnotationPage = () => {
 				</Popover>
 			</div>
 
-			<p>Load your variants in VCF format or by variant calling:</p>
+			<p>Load your variants in VCF format:</p>
 			<div
 				style={{
 					display: 'flex',

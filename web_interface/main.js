@@ -15,6 +15,7 @@ function createMainWindow() {
 		minWidth: 800,
 		minHeight: 600,
 		show: false,
+		icon: __dirname + "/angenov.png",
 		webPreferences: {
 			nodeIntegration: true,
 		},
