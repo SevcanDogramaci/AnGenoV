@@ -2,23 +2,49 @@ import subprocess
 import os
 import sys
 import shutil
+import psutil
 from pathlib import Path
+import time
+import io
 
-out="a"
+success=True
+errorMsg=""
+toolOut=""
+def on_terminate(proc):
+    print("process {} terminated with exit code {}".format(proc, proc.returncode))
 
 def runSVCallerTool (referenceFile, alignedFile, toolName, allArgs):
-    global out
-
+    global success
+    global errorMsg
+    global toolOut
     for arg in allArgs:
-        popen=subprocess.Popen("x-terminal-emulator -e \"echo " + toolName + " is running...;echo;" + arg + "\"", shell=True, stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.PIPE)
-        popen.wait()
-
+   
+        #popen=subprocess.run("x-terminal-emulator -e \"echo " + toolName + " is running...;echo;" + arg + "\"" + " > log.txt", shell=True, capture_output=True, text=True)
+        #cmd="x-terminal-emulator -e 'echo " + toolName + " is running...;echo;" + arg + " 2>&1 | tee log.txt'"
+        cmd="x-terminal-emulator -e \"bash -c \\\"set -o pipefail;echo " + toolName + " is running...;echo;" + arg + " 2>&1 | tee log.txt\\\"\""
+        print (cmd)
+        popen=subprocess.run(cmd, shell=True, executable='/bin/bash', stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        
+        returncode=popen.returncode
+        print(returncode)
+        f = open("log.txt", "r")
+        if returncode != 0 :
+            success = False
+            errorMsg += f.read()
+            f.close()
+        else:
+            success = True
+            toolOut += f.read()
+            f.close()
+        
     toolName = toolName.lower()
     return os.getcwd() + "/temp/ToolsOutputs/"  + toolName
 
 def runSelectedTools(reference_file, aligned_file, selectedTools):
     import json
-
+    global success
+    global errorMsg
+    global toolOut
     print("Inputs >> ", reference_file, aligned_file, selectedTools)
     responseMessages = []
     files = []
@@ -49,8 +75,17 @@ def runSelectedTools(reference_file, aligned_file, selectedTools):
                     print("Error: %s : %s" % (dir_path, e.strerror))
                 
                 outputFileForResponse = runSVCallerTool(reference_file, aligned_file, tool["name"], allArgs)
-                responseMessages.append( tool["name"] + " is finished successfully\n")
-                files.append(outputFileForResponse)
+                if success:
+                    responseMessages.append( tool["name"] + " is finished successfully\n")
+                    with open(outputFileForResponse+"/consoleLogs.txt", 'w') as f:
+                        f.write(toolOut)
+                        f.close()
+                    toolOut=""
+                    files.append(outputFileForResponse)
+                else:  
+                    responseMessages.append( "*---" + tool["name"] + " has an error: " + errorMsg)
+                    errorMsg=""
+                
 
     return (responseMessages, files)
     

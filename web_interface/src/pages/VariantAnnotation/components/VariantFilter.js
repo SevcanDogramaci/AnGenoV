@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { Button, Icon, InputGroup, Intent, Tooltip } from '@blueprintjs/core';
 
+import { ipcRenderer } from 'electron';
 import { AnnotationContext } from '../AnnotationContext';
 import Service from '../../../services/Service';
 
@@ -34,8 +35,16 @@ const VariantFilter = () => {
 	const updateFilteredVariants = (filterCondition) => {
 		console.log('Filter condition:', filterCondition);
 		context.setVariantsInfo({ type: 'start-running' });
-		Service.filterVariants(context.VCFfile.path, filterCondition, 0).then((result) => {
+		Service.filterVariants(context.variantsInfo.VCFfile.path, filterCondition, 0).then((response) => {
 			console.log('FilterVariants bitti');
+			console.log(response.message, response.messageType);
+
+			if (response.messageType === 'ERROR') {
+				console.log("Hereeeeee")
+				ipcRenderer.invoke('show-error-dialog', { message: response.message });
+			}
+
+			const result = response.returnObject;
 
 			if (result.variants.length > 0) {
 				context.setVariantsInfo({
@@ -60,13 +69,14 @@ const VariantFilter = () => {
 	const resetFilter = (event) => {
 		console.log('resetFilter');
 		context.setVariantsInfo({ type: 'start-running' });
-		Service.getVariantsByPage(context.VCFfile.path, context.variantsInfo.currentPageNo).then((result) =>
-			context.setVariantsInfo({
-				type: 'finish-running',
-				variants: result.variants,
-				currentPageNo: result.current_page_no,
-				totalPageNumber: result.total_page_number,
-			})
+		Service.getVariantsByPage(context.variantsInfo.VCFfile.path, context.variantsInfo.currentPageNo).then(
+			(result) =>
+				context.setVariantsInfo({
+					type: 'finish-running',
+					variants: result.variants,
+					currentPageNo: result.current_page_no,
+					totalPageNumber: result.total_page_number,
+				})
 		);
 	};
 

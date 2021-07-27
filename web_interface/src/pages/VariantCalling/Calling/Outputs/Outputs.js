@@ -51,8 +51,8 @@ const Outputs = (props) => {
 							justifyContent: 'center',
 						}}
 					>
-						<Pre style={{ display: 'flex', flexDirection: 'column' }}>
-							<RunningText stop={context.runningInfo.running === false} />
+						<Pre style={{ display: 'flex', flexDirection: 'column', maxWidth: '33vw', overflow: 'auto' }}>
+						{!isRunning(context.runningInfo) && <RunningText stop={context.runningInfo.running === false} />}
 							{isRunning(context.runningInfo) &&
 								context.runningInfo.responseMessages.message.map((element, id) => <div>{element}</div>)}
 						</Pre>
@@ -65,23 +65,25 @@ const Outputs = (props) => {
 								{console.log(
 									'OutputFile >>>',
 									context.runningInfo.responseMessages,
-									context.runningInfo.responseMessages.fileName
+									context.runningInfo.responseMessages.returnObject
 								)}
-								{context.runningInfo.responseMessages.fileName.map((fileName, id) => (
+								{context.runningInfo.responseMessages.returnObject.map((fileName, id) => (
 									<OutputFile onOutputFileChecked={handleOutputFileChanged} filePath={fileName} />
 								))}
 							</div>
 
 							<div style={{ width: '50%', marginTop: '1%' }}>
-								<Button
-									fill
-									onClick={(e) => {
-										console.log('Saving...');
-										saveFilesToSelectedDirectory();
-									}}
-								>
-									Save
-								</Button>
+								{context.runningInfo.responseMessages.returnObject.length ? (
+									<Button
+										fill
+										onClick={(e) => {
+											console.log('Saving...');
+											saveFilesToSelectedDirectory();
+										}}
+									>
+										Save
+									</Button>
+								) : <p></p>}
 							</div>
 						</>
 					)}

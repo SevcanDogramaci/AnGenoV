@@ -43,15 +43,17 @@ const TablePaginator = (props) => {
 		const currentPageNo = type === 'prev-page' ? current - 1 : current + 1;
 
 		if (filtered) {
-			Service.filterVariants(context.VCFfile.path, context.variantsInfo.filter, currentPageNo).then((result) => {
-				context.setVariantsInfo({
-					type: `${type}-${filtered}`,
-					variants: result.variants,
-					totalPageNumber: result.total_page_number,
-				});
-			});
+			Service.filterVariants(context.variantsInfo.VCFfile.path, context.variantsInfo.filter, currentPageNo).then(
+				(result) => {
+					context.setVariantsInfo({
+						type: `${type}-${filtered}`,
+						variants: result.variants,
+						totalPageNumber: result.total_page_number,
+					});
+				}
+			);
 		} else {
-			Service.getVariantsByPage(context.VCFfile.path, currentPageNo).then((result) => {
+			Service.getVariantsByPage(context.variantsInfo.VCFfile.path, currentPageNo).then((result) => {
 				context.setVariantsInfo({
 					type: `${type}`,
 					variants: result.variants,

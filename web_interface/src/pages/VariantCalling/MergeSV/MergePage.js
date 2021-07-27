@@ -75,7 +75,7 @@ const MergePage = (props) => {
 					buttonText="Browse"
 					style={{ margin: '2%', width: '600px', marginRight: '1%' }}
 					onInputChange={handleFileChange}
-					inputProps={{ multiple: true }}
+					inputProps={{ multiple: true, accept: ".vcf, .bcf"}}
 				/>
 				<Tooltip content="At least 2 VCF files" position={Position.RIGHT} intent="warning">
 					<Icon icon="info-sign" intent="warning" />
