@@ -1,5 +1,7 @@
 # AnGenoV
 
+![Poster of AnGenoV ](https://github.com/SevcanDogramaci/AnGenoV/blob/main/Poster_AnGenoV.png)
+
 ### How to install
 
 ```bash
